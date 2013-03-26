@@ -1,0 +1,1 @@
+CREATE  TABLE `test`.`usuarios` (  `id` INT NOT NULL AUTO_INCREMENT ,  `nome` VARCHAR(45) NULL ,  `email` VARCHAR(45) NULL ,  `site` VARCHAR(45) NULL ,  `datanascimento` DATE NULL ,  `cpf` VARCHAR(45) NULL ,  `cep` VARCHAR(45) NULL ,  PRIMARY KEY (`id`) );

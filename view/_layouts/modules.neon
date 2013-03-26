@@ -1,0 +1,10 @@
+#informa quais módulos podem ser carregados em um layout
+'layout_modules':
+ default = [menu]
+
+#informa quais dependências cada módulo tem
+'modules_dependences':
+ menu:
+  css = {}
+  js = {}
+  libs = {dbf}

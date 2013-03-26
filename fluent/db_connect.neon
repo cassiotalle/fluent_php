@@ -1,0 +1,5 @@
+#Dados para acesso ao banco de dados
+db='test'
+host='localhost'
+user='root'
+password='' 

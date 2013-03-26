@@ -1,0 +1,25 @@
+#Formato para os dados
+mask:
+ string:
+  date='99/99/9999'
+  time='99:99:99'
+  cpf='999.999.999-99'
+  tel='(99)9999-9999'
+  cep='99999-999'
+ numeric:
+  real='R$'
+  dolar='US$'
+  euro='euro'
+  deciaml=null
+
+#Mensagens para validação dos campos
+validation_mensages:
+ date = 'Data inválida.'
+ cpf='Número de cpf inválido.'
+ email='E-mail inválido.'
+ url='url inválida.'
+ isnull='Este campo é obrigatório.'
+ int='Este campo só aceita números inteiros.'
+ decimal='Este camos só aceita valores decimais'
+ minlen='Quantidade de caracteres inferior ao permitido.'
+ maxlen='Número de caracteres superior ao permitido'

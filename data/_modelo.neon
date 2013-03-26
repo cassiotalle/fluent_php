@@ -1,0 +1,30 @@
+#nome: (nome do campo)
+#  title = Nome (nome conco o campo será exibido no sistema)
+#  #Grupo de tipo de dados
+#  type = email
+#  type = url
+#  type = int
+#  type = decimal
+#  type = cpf
+#  type = date
+#  type = captcha
+#  #Grupo de validações
+#  minlen = 10
+#  maxlen = 25
+#  equal = valor
+#  unique = true
+#  null = true
+#  unique = true
+
+
+nome:
+  title=Nome
+  maxlen = 25
+email:
+  type = email
+  title = Email
+senha:
+  type = password
+  title = Senha
+dn:
+  title = Data de Nascimento
