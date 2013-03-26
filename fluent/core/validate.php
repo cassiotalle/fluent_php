@@ -6,10 +6,12 @@ class Validate {
   private $add = array();
   public $data;
   private $validate_user;
+  private $table;
+
   function __construct() {
-    $this->validate_user = Neon::decode_file(PATH.'fluent'.DS.'validate.neon');
+    $this->validate_user = Neon::decode_file(PATH . 'fluent' . DS . 'validate.neon');
   }
-  
+
   /**
    * Grupo de tipo de dados
    */
@@ -26,11 +28,7 @@ class Validate {
     if (preg_match($pattern, $email))
       return true;
     else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['email'];
-      }
+      $this->set_message_error('email', $field, $message);
       return false;
     }
   }
@@ -46,11 +44,7 @@ class Validate {
     if (preg_match("/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i", $value)) {
       return true;
     } else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['url'];
-      }
+      $this->set_message_error('url', $field, $message);
       return false;
     }
   }
@@ -66,11 +60,7 @@ class Validate {
     if (is_int($number)) {
       return true;
     } else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['int'];
-      }
+      $this->set_message_error('int', $field, $message);
       return false;
     }
   }
@@ -86,11 +76,7 @@ class Validate {
     if (preg_match('!^\d+.\d\d$!', $number)) {
       return true;
     } else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['decimal'];
-      }
+      $this->set_message_error('decimal', $field, $message);
       return false;
     }
   }
@@ -135,11 +121,7 @@ class Validate {
     if ($cpf_validar == $cpf) {
       return true;
     } else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['cpf'];
-      }
+      $this->set_message_error('cpf', $field, $message);
       return false;
     };
   }
@@ -158,11 +140,7 @@ class Validate {
     if (checkdate($m, $d, $y)) {
       return true;
     } else {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['date'];
-      }
+      $this->set_message_error('date', $field, $message);
       return false;
     }
   }
@@ -185,20 +163,6 @@ class Validate {
   }
 
   /**
-   * Validação
-   * @param type $data
-   * @param type $data_return
-   */
-  private function redlink(&$data, &$data_return) {
-    if (array_key_exists('redlink', App::$model)) {
-      $k = App::$model['redlink']['Key'];
-      if (array_key_exists($k, $data) && isset($data[$k])) {
-        $data_return['redlink'] = simpleString($data[$k], '_', -1);
-      }
-    }
-  }
-
-  /**
    * 
    * @param type $field
    * @param type $value
@@ -206,11 +170,11 @@ class Validate {
    * @param type $message
    * @return boolean
    */
-  public function equal($field, $value, $value2, $message) {
+  public function equal($field, $value, $value2, $message = null) {
     if ($value == $value2) {
       return true;
     } else {
-      self::$errorList[$field] = $message;
+      $this->set_message_error('equal', $field, $message, $value2);
       return false;
     }
   }
@@ -223,14 +187,13 @@ class Validate {
    * @param type $table
    * @return boolean
    */
-  public function unique($field, $value, $value2, $message) {
-    if (!isset($table))
-      $table = App::$current_table;
-    Db::query('SELECT ' . $field . ' FROM ' . $table . ' where ' . $field . ' = "' . $value . '";');
+  public function unique($field, $value, $value2, $message = null) {
+    Db::query('SELECT ' . $field . ' FROM ' . $this->table . ' where ' . $field . ' = "' . $value . '";');
     if (!Db::numRows()) {
       return true;
     } else {
-      self::$errorList[$field] = $message;
+      $this->set_message_error('unique', $field, $message);
+      false;
     }
   }
 
@@ -242,9 +205,9 @@ class Validate {
    * @param type $message
    * @return boolean
    */
-  public function max($field, $value, $value2, $message) {
+  public function max($field, $value, $value2, $message = null) {
     if ($value > $value2) {
-      self::$errorList[$field] = $message;
+      $this->set_message_error('max', $field, $message, $value2);
       return false;
     } else {
       return true;
@@ -259,11 +222,11 @@ class Validate {
    * @param type $message
    * @return boolean
    */
-  public function min($field, $value, $value2, $message) {
+  public function min($field, $value, $value2, $message = null) {
     if ($value < $value2) {
       return true;
     } else {
-      self::$errorList[$field] = $message;
+      $this->set_message_error($field, $message);
       return false;
     }
   }
@@ -275,13 +238,9 @@ class Validate {
    * @param type $message
    * @return boolean
    */
-  public function notnull($field, $value, $message = null) {
+  public function not_null($field, $value, $value2, $message = null) {
     if (strlen($value) < 1 || is_null($value)) {
-      if (isset($message)) {
-        self::$errorList[$field] = $message;
-      } else {
-        self::$errorList[$field] = $this->validate_user['validation_mensages']['not_null'];
-      }
+      $this->set_message_error('not_null', $field, $message);
       return false;
     } else {
       return true;
@@ -295,9 +254,10 @@ class Validate {
    * @param type $max
    * @return boolean
    */
-  public function maxlen($field, $value, $max, $message = null) {
+  public function max_len($field, $value, $max, $message = null) {
     $len = strlen($value);
     if ($len > $max) {
+      $this->set_message_error('max_len', $field, $message, $max);
       return false;
     } else {
       return true;
@@ -311,40 +271,51 @@ class Validate {
    * @param type $min
    * @return boolean
    */
-  public function minlen($field, $value, $min, $message = null) {
+  public function min_len($field, $value, $min, $message = null) {
     $len = strlen($value);
     if ($len < $min) {
+      $this->set_message_error('min_len', $field, $message, $min);
       return false;
     } else {
       return true;
     }
   }
 
+  private function set_message_error($type, $field, $message, $value = null) {
+    if (isset($message)) {
+      if(isset($value)) {
+      $message = replace_firt($value, $this->validate_user['validation_mensages'][$type]);
+      }
+      else{
+        $message = $this->validate_user['validation_mensages'][$type];
+      }
+    }
+    self::$errorList[$field] = $message;
+  }
+
   public function process($table, $data) {
-    $model = Neon::decode_file(PATH . 'data' . DS . $table . '.neon');  
+    $model = Neon::decode_file(PATH . 'data' . DS . $table . '.neon');
+    $this->table = $table;
     if ($model) {
       $data_return = array();
       $keys = array_keys($model);
- 
+
       foreach ($keys as $k) {
-        if(array_key_exists('type',$model[$k])){
-        $type = $model[$k]['type'];
-        $this->$type($k, $data[$k]);
-        
-        if(array_key_exists('validate', $model[$k]) && check_array($model[$k]['validate'])){
-          $kvs = array_keys($model[$k]['validate']);
-          foreach ($kvs as $kv){
-            if(is_array($model[$k]['validate'][$kv]) && count($model[$k]['validate'][$kv]) == 2){
-              $mensage = $model[$k]['validate'][$kv][1];
+        if (array_key_exists('type', $model[$k])) {
+          $type = $model[$k]['type'];
+          $this->$type($k, $this->filter($data[$k], $tyipe));
+          if (array_key_exists('validate', $model[$k]) && check_array($model[$k]['validate'])) {
+            $kvs = array_keys($model[$k]['validate']);
+            foreach ($kvs as $kv) {
+              if (is_array($model[$k]['validate'][$kv]) && count($model[$k]['validate'][$kv]) == 2) {
+                $mensage = $model[$k]['validate'][$kv][1];
+              } else {
+                $mensage = $this->validate_user['validation_mensages'][$kv];
+              }
+              $this->$kv($k, $data[$k], $model[$k]['validate'][$kv], $mensage);
             }
-            else{
-              $mensage = $this->validate_user['validation_mensages'][$kv];
-            }
-            $this->$kv($k, $data[$k], $model[$k]['validate'][$kv], $mensage);
           }
         }
-        
-      }
 
         if ($valid && array_key_exists($k, $this->add) && array_key_exists($k, $data)) {
           $function = $this->add[$k][0];
@@ -398,24 +369,6 @@ class Validate {
         break;
     }
     return $value;
-  }
-
-  private function defealtValidade($field, $type, $value) {
-    $types = array(
-        'euro' => 'decimal',
-        'dollar' => 'decimal',
-        'real' => 'decimal',
-        'date' => 'date',
-        'email' => 'email',
-        'cpf' => 'cpf',
-        'int' => 'int',
-        'url' => 'url'
-    );
-    if (array_key_exists($type, $types)) {
-      return $this->$types[$type]($field, $value);
-    }
-    else
-      return true;
   }
 
   public function add($type, $field, $value, $msg = null) {

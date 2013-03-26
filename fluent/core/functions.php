@@ -177,5 +177,14 @@ function development_true() {
   }
 }
 
+/**
+ * Substitui a primeira ocorrência de ? por uma variável
+ * @param type $value
+ * @param type $text
+ * @return type
+ */
+function replace_firt($value, $text){
+  return preg_replace("/^\?/", $value, $text);
+}
 
 ?>

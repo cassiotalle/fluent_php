@@ -14,12 +14,17 @@ mask:
 
 #Mensagens para validação dos campos
 validation_mensages:
- date = 'Data inválida.'
+ date='Data inválida.'
  cpf='Número de cpf inválido.'
  email='E-mail inválido.'
- url='url inválida.'
- isnull='Este campo é obrigatório.'
+ url='Url inválida.'
+ is_null='Este campo é obrigatório.'
  int='Este campo só aceita números inteiros.'
  decimal='Este camos só aceita valores decimais'
- minlen='Quantidade de caracteres inferior ao permitido.'
- maxlen='Número de caracteres superior ao permitido'
+ min='O valor deste campo não pode ser menor que ?.'
+ max='O valor deste campo não pode ser maior que ?.'
+ min_len='Quantidade de caracteres menor que ?.'
+ max_len='Número de caracteres maior que ?.'
+ uniqe='Valor já existente escolha outro.'
+ equal='Deve ser igual à ?.'
+ captcha='Código de segurança inválido.'

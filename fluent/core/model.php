@@ -57,7 +57,7 @@ class Model {
     } elseif ($n > 1) {
       $i = 1;
       for ($i = 1; $i < $n; $i++) {
-        $arg[0] = preg_replace("/^\?/", $arg[$i], $arg[0]);
+        $arg[0] = replace_firt($arg[$i], $arg[0]);
       }
     }
     $this->reset();
