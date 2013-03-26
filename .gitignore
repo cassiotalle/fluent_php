@@ -1,11 +1,17 @@
 # Compiled source #
 ###################
 nbproject/
+
 data/*
 !data/_*
-controller/*
-!controller/home_controller.php
 
-view/**/*
+!controller/home_controller.php
+controller/*
+
+
 !view/_layouts/*
 !view/home/*
+view/**/*
+
+
+

@@ -1,5 +1,6 @@
 
 <?
+#teste
 //$s = '?a?au';
 //echo preg_replace("/^\?/", 'r',$s);
 
