@@ -148,20 +148,22 @@ class Model {
 
   private function e_select() {
     $this->_sql = $this->_action . $this->_fields . 'form ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit;
+    pr($this->sql);
   }
 
   private function e_delete() {
-    $this->_sql = 'DELETE from ' . $this->_table . $this->_were;
+    $this->_sql = 'DELETE FROM ' . $this->_table . $this->_were;
+    pr($this->sql);
     //return Db::query($sql);
   }
   
   private function e_create(){
-
     if(App::$obj['Validate']->process($this->_table, $this->_data)) {
-            $k = array_keys(App::$obj['Validate']->data);
-            $values = $this->filterByType(App::$obj['Validate']->data);
-            $sql = 'INSERT into '.$this->table.' ('.concat_array($k).') VALUES ('.concat_array($values).');';
-            return Db::query($sql);
+            $k = array_keys(App::$obj['Validate']->data);   
+            $v = App::$obj['Validate']->data;   
+            $sql = 'INSERT INTO '.$this->_table.' ('.concat_array($k).') VALUES ('.concat_array($v).');';
+            pr($sql);
+            //return Db::query($sql);
         }
   }
   

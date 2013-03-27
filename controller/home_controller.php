@@ -13,9 +13,8 @@ class HomeController extends Controller{
     //$this->data->entrada->selectById('10');
     $dados = array(
         'nome'=>'Cássio Talle e Silva', 
-        'email'=>'cassiolandia@gmail.com', 
+        'email'=>'cassiolandia@gmailcom', 
         'datanascimento'=>'28/02/2013', 
-        'email'=>'cassiolandia@gmail.com', 
         'site'=>'www.bookserie.com.br');
     $this->data->usuario->create($dados)->exec();
   }

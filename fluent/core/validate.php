@@ -25,9 +25,9 @@ class Validate {
    */
   public function email($field, $email, $message = null) {
     $pattern = "/^([a-zA-Z0-9])+([\.a-zA-Z0-9_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)+/";
-    if (preg_match($pattern, $email))
+    if (preg_match($pattern, $email)) {
       return true;
-    else {
+    } else {
       $this->set_message_error('email', $field, $message);
       return false;
     }
@@ -283,12 +283,9 @@ class Validate {
 
   private function set_message_error($type, $field, $message, $value = null) {
     if (isset($message)) {
-      if(isset($value)) {
       $message = replace_firt($value, $this->validate_user['validation_mensages'][$type]);
-      }
-      else{
-        $message = $this->validate_user['validation_mensages'][$type];
-      }
+    } else {
+      $message = $this->validate_user['validation_mensages'][$type];
     }
     self::$errorList[$field] = $message;
   }
@@ -296,48 +293,41 @@ class Validate {
   public function process($table, $data) {
     $model = Neon::decode_file(PATH . 'data' . DS . $table . '.neon');
     $this->table = $table;
+    $valid = true;
     if ($model) {
-      $data_return = array();
       $keys = array_keys($model);
-
       foreach ($keys as $k) {
+        // Chama validação de tipo de dado
         if (array_key_exists('type', $model[$k])) {
+          // Formata dados
+          if (array_key_exists($k, $data)) {
+            $data[$k] = $this->filter($data[$k], $model[$k]['type']);
+          } else {
+            $data[$k] = '';
+          }
           $type = $model[$k]['type'];
-          $this->$type($k, $this->filter($data[$k], $tyipe));
-          if (array_key_exists('validate', $model[$k]) && check_array($model[$k]['validate'])) {
-            $kvs = array_keys($model[$k]['validate']);
-            foreach ($kvs as $kv) {
-              if (is_array($model[$k]['validate'][$kv]) && count($model[$k]['validate'][$kv]) == 2) {
-                $mensage = $model[$k]['validate'][$kv][1];
-              } else {
-                $mensage = $this->validate_user['validation_mensages'][$kv];
-              }
-              $this->$kv($k, $data[$k], $model[$k]['validate'][$kv], $mensage);
+          $valid = $this->$type($k, $data[$k]);
+        }
+        // Chama validação condicional
+        if ($valid && array_key_exists('validate', $model[$k]) && check_array($model[$k]['validate'])) {
+          $kvs = array_keys($model[$k]['validate']);
+          foreach ($kvs as $kv) {
+            $message = true;
+            if (is_array($model[$k]['validate'][$kv]) && count($model[$k]['validate'][$kv]) == 2) {
+              $message = $model[$k]['validate'][$kv][1];
             }
+            $this->$kv($k, $data[$k], $model[$k]['validate'][$kv], $message);
           }
         }
-
-        if ($valid && array_key_exists($k, $this->add) && array_key_exists($k, $data)) {
-          $function = $this->add[$k][0];
-          if (array_key_exists($k, $data_return)) {
-            $v = $data_return[$k];
-          } else {
-            $v = $data[$k];
-          }
-          if (isset($this->add[$k][1])) {
-            $this->$function($k, $v, $this->add[$k][1], $this->add[$k][2]);
-          } else {
-            $this->$function($k, $v, $this->add[$k][2]);
-          }
-        }
+        $valid = true;
       }
+      //
     }
 
     if (check_array(self::$errorList)) {
-      App::$data = $data;
       return false;
     } else {
-      $this->data = $data_return;
+      $this->data = $data;
       return true;
     }
   }
@@ -376,5 +366,4 @@ class Validate {
   }
 
 }
-
 ?>
