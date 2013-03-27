@@ -23,6 +23,9 @@ class FormLib {
     if (!array_key_exists($name, App::$model)) {
       App::$model[$name] = Neon::decode_file(MODEL . $name . '.neon');
     }
+    if (is_array(App::$data[$name])) {
+      $this->data = App::$data[$name];
+    }
     $this->mask();
     if (is_null($action))
       $action = App::$url;
@@ -34,12 +37,106 @@ class FormLib {
     echo "\n" . '<form name="' . $name . '" id="' . $name . '" method="' . $method . '" action="' . $action . '" ' . $this->atributes($atributes) . ' >' . "\n";
   }
 
+  /**
+   * Escreve um label
+   * @param type $for
+   * @param type $text
+   * @return null
+   */
   public function label($for, $text) {
     if (isset($text)) {
       return '<label for="' . $for . '">' . $text . '</label>';
+    } else
+    if (isset(App::$model[$this->name][$for]['title'])) {
+      return '<label for="' . $for . '">' . App::$model[$this->name][$for]['title'] . '</label>';
     }
     else
       return null;
+  }
+
+  /**
+   * Cria um campo no formulário de acordo com o seu tipo
+   * @param type $type
+   * @param type $name
+   * @param type $title
+   * @param type $value
+   * @param type $atributes
+   */
+  public function input($type, $name, $title = null, $value = null, $atributes = null) {
+    echo $this->label($name, $title);
+    // Gerar campos radio e checkbox
+    if ($type == 'radio' || $type == 'checkbox') {
+      $br = "&nbsp;";
+      if (count($value) > 3){
+        $br = '<br />';
+      }
+      foreach ($value as $v) {
+        $field .= '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $v[0] . '" >' . $this->label($name, $v[1]) . $br;
+      }
+      echo $field;
+    } 
+    elseif($type == 'textarea'){
+      echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
+    }
+    else {
+      echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $this->load_value($name, $value) . '" ' . $this->atributes($atributes) . ' />';
+    }
+    $this->showError($name);
+  }
+
+  public function text($name, $title = null, $value = null, $atributes = null) {
+    $this->input('text', $name, $title, $value, $atributes);
+  }
+
+  public function password($name, $title = null, $value = null, $atributes = null) {
+    $this->input('password', $name, $title, $value, $atributes);
+  }
+
+  public function hidden($name, $value = null, $atributes = false) {
+    $this->input('hidden', $name, null, $value, $atributes);
+  }
+
+  public function button($name, $value = null, $atributes = false) {
+    $this->input('button', $name, null, $value, $atributes);
+  }
+
+  public function submit($value) {
+    echo '<input type="submit" name="submit" id="submit" value="' . $value . '">';
+  }
+
+  public function radio($name, $title = null, $value = array(), $atributes = null) {
+    $this->input('radio', $name, $title, $value, $atributes);
+  }
+
+  public function checkbox($name, $title = null, $value = array(), $atributes = null) {
+    $this->input('radio', $name, $title, $value, $atributes);
+  }
+
+  public function file($name, $title = null, $value = null, $atributes = false) {
+    $this->input('file', $name, $title, $value, $atributes);
+  }
+
+  public function textarea($name, $title = null, $value = null, $atributes = null) {
+    $this->input('textarea', $name, $title, $value, $atributes);
+  }
+  
+  public function captcha($title) {
+    $this->setField('captcha');
+    include(LIBS . 'componnents/captcha.php');
+    $capt = new Captcha();
+    echo '<label for="captcha">' . $title . '</label>';
+    echo $capt->gif;
+    echo '<input type="text" name="captcha" id="captcha" maxlength="4" size="10" />';
+    $this->showError('captcha');
+  }
+
+  private function load_value($name, $value) {
+    if (array_key_exists($name, $this->data)) {
+      return;
+      App::$data[$table][$this->$name];
+    }
+    else
+      return $value;
   }
 
   private function mask() {
@@ -58,78 +155,14 @@ class FormLib {
     }
   }
 
-  public function field($name, $legend = false) {
-    if (array_key_exists($name, App::$model[$thi->name])) {
-      if (array_key_exists(App::$model[$thi->name][$name]['type'], $this->field_type)) {
-        $this->loadInput($this->field_type[App::$model[$thi->name][$name]['type']], $name);
-      } else {
-
-        $this->input($name, 'text', App::$model[$thi->name][$name]['Title'], null, 'maxlength="' . App::$model[$thi->name][$name]['max_len'] . '" size="' . $size . '"');
-      }
-
-      if ($legend) {
-        echo '<span id="form_legend"' . App::$model[$name]['Legend'];
-      }
-    } else {
-      echo "Erro, campo " . $name . "inesistente";
-    }
-  }
-
-  private function loadInput($type, $name) {
-    switch ($type) {
-      case 'date': $this->input($name, 'text', App::$model[$name]['Title'], null, 'maxlength="10" size="10"');
-        break;
-      case 'text': $this->text($name, App::$model[$name]['Title']);
-        break;
-      case 'password': $this->input($name, 'password', App::$model[$name]['Title'], null, 'maxlength="16" size="16"');
-        break;
-    }
-  }
-
-  public function hidden($name, $value = '', $atributes = false) {
-    $this->setField($name);
-    if (array_key_exists($name, App::$data))
-      $value = App::$data[$name];
-    echo '<input type="hidden" name="' . $name . '" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' /> ';
-    $this->showError($name);
-  }
-
-  public function input($name, $type = 'text', $title = null, $value = null, $atributes = null) {
-    $this->setField($name);
-    if (isset($title))
-      echo $this->label($name, $title);
-    if (array_key_exists($name, App::$data))
-      $value = App::$data[$name];
-    echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
-    $this->showError($name);
-  }
-
-  public function file($name, $title = '', $value = '', $atributes = false) {
-    $this->setField($name);
-    if (isset($title))
-      echo $this->label($name, $title);
-    if (array_key_exists($name, App::$data))
-      $value = App::$data[$name];
-    echo '<input type="file" name="' . $name . '" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
-    $this->showError($name);
-  }
-
-  public function text_area($name, $title = '', $value = '', $atributes = null) {
-    $this->setField($name);
-    if (isset($title))
-      echo $this->label($name, $title);
-    if (array_key_exists($name, App::$data))
-      $value = App::$data[$name];
-    echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . $value . '</textarea>';
-    $this->showError($name);
-  }
-
-  public function submit($value) {
-    echo '<input type="submit" name="submit" id="submit" value="' . $value . '">';
-  }
-
 // Funções para lista...
-
+  
+  /**
+   * Implementa elementos selecionados em um List, checkbox e radio
+   * @param type $type
+   * @param type $name
+   * @param type $selected
+   */
   public function listField($type, $name, $selected = null) {
     $values = explode('_', $name);
     $table = $values[0];
@@ -139,7 +172,6 @@ class FormLib {
       foreach ($array as $a) {
         $v[] = $a[0];
       }
-
       $opt_chek['radio'] = '" checked="checked';
       $opt_chek['checkbox'] = '" checked="checked';
       $opt_chek['select'] = '" selected="selected';
@@ -163,32 +195,6 @@ class FormLib {
     }
   }
 
-  public function checkbox($name, array $value) {
-    $this->setField($name);
-    $field = null;
-    $br = "&nbsp;";
-    if (count($value) > 3)
-      $br = '<br />';
-    foreach ($value as $v) {
-      $field .= '<input type="checkbox" name="' . $name . '" id="' . $name . '" value="' . $v[0] . '" ' . $this->atributes($atributes) . ' >' . $this->label($name, $v[1]) . $br;
-    }
-    echo $field;
-    echo $this->showError($name);
-  }
-
-  public function radio($name, $value) {
-    $this->setField($name);
-    $field = null;
-    $br = "&nbsp;";
-    if (count($value) > 3)
-      $br = '<br />';
-    foreach ($value as $v) {
-      $field .= '<input type="radio" name="' . $name . '" id="' . $name . '" value="' . $v[0] . '" >' . $this->label($name, $v[1]) . $br;
-    }
-    echo $field;
-    echo $this->showError($name);
-  }
-
   public function select($name, $value) {
     $this->setField($name);
     $field = '<select name="' . $name . '" id="' . $name . '"  >';
@@ -204,15 +210,7 @@ class FormLib {
    * Captcha
    * Gera uma imagem para validação de formulário.
    */
-  public function captcha($title) {
-    $this->setField('captcha');
-    include(LIBS . 'componnents/captcha.php');
-    $capt = new Captcha();
-    echo '<label for="captcha">' . $title . '</label>';
-    echo $capt->gif;
-    echo '<input type="text" name="captcha" id="captcha" maxlength="4" size="10" />';
-    $this->showError('captcha');
-  }
+  
 
 // fim das funções de select
 
@@ -276,4 +274,5 @@ class FormLib {
   }
 
 }
+
 ?>

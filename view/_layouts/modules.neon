@@ -7,4 +7,4 @@
  menu:
   css = {}
   js = {}
-  libs = {dbf}
+  libs = {}
