@@ -366,4 +366,5 @@ class Validate {
   }
 
 }
+
 ?>

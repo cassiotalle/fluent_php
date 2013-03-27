@@ -1,5 +1,6 @@
 <?php
-class Db{
+
+class Db {
 
   public static $conected;
   public static $conect_details = null;
@@ -7,7 +8,7 @@ class Db{
   public static $numRows;
 
   public static function connect() {
-    $db_conect = Neon::decode_file(PATH.'fluent'.DS.'db_connect.neon');
+    $db_conect = Neon::decode_file(PATH . 'fluent' . DS . 'db_connect.neon');
     self::$conect_details = mysql_connect($db_conect['host'], $db_conect['user'], $db_conect['password']);
 
     if (self::$conect_details) {

@@ -9,12 +9,12 @@ if (isset($_GET['url'])) {
   $url = preg_split('/(\/)/', $_GET['url'], -1, PREG_SPLIT_NO_EMPTY);
   $url[0] = strtolower($url[0]);
   $url_count = count($url);
-  
+
   //verifica se há prefixo para esta url definida pela veriável App::$prefix_router
   if (in_array($url[0], App::$prefix_router) && $url_count > 1) {
     if (file_exists(CONTROLLER . $url[0] . '_' . $url[1] . '_controller.php')) {
-      $c = $url[0].'_' . $url[1];
-      $url = array_slice($url,2);
+      $c = $url[0] . '_' . $url[1];
+      $url = array_slice($url, 2);
       array_unshift($url, $c);
     }
   }
@@ -30,7 +30,7 @@ if (isset($_GET['url'])) {
       }
     }
   }
-  
+
   if (count($url) == 1)
     $url[1] = 'index';
   elseif ($url_count > 2) {

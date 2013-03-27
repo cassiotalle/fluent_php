@@ -12,6 +12,7 @@ define('LIBS', PATH . 'fluent'.DS.'libs' . DS);
 define('CONTROLLER', PATH . 'controller' . DS);
 define('VIEW', PATH . 'view' . DS);
 define('SITE', PATH . 'site' . DS);
+define('MODEL', PATH . 'data' . DS);
 define('LAYOUT', VIEW . '_layouts' . DS);
 include (CORE . 'functions.php');
 register_shutdown_function('development_true');

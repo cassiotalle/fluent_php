@@ -56,8 +56,8 @@ function concat_array(array $array, $by = ',') {
 function moeda($get_valor) {
   $source = array('.', ',');
   $replace = array('', '.');
-  $valor = str_replace($source, $replace, $get_valor); 
-  return $valor; 
+  $valor = str_replace($source, $replace, $get_valor);
+  return $valor;
 }
 
 /**
@@ -88,9 +88,9 @@ function simpleString($string = '', $spaces = false, $alter = 0) {
  * @param type $delimiter
  * @return string
  */
-function uper_($string, $delimiter='_'){
+function uper_($string, $delimiter = '_') {
   $a = explode($delimiter, $string);
-  foreach ($a as $b){
+  foreach ($a as $b) {
     $r .= ucfirst($b);
   }
   return $r;
@@ -145,7 +145,7 @@ function set_include_error($error, $object, $feactures) {
           'Layout não localizado',
           'O layout <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>')
   );
-  
+
   if (App::$development)
     include(PATH . 'error' . DS . 'error.php');
   else {
@@ -171,9 +171,9 @@ function set($name, $var) {
 function development_true() {
   if (App::$development) {
     echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
-    round(memory_get_usage(true)/1024, 2) . 'KB | ' .
+    round(memory_get_usage(true) / 1024, 2) . 'KB | ' .
     round(memory_get_peak_usage(true), 2) . 'KB |' .
-    round(microtime(true) - $_SERVER['REQUEST_TIME'] , 3) . 's</div>';
+    round(microtime(true) - $_SERVER['REQUEST_TIME'], 3) . 's</div>';
   }
 }
 
@@ -183,7 +183,7 @@ function development_true() {
  * @param type $text
  * @return type
  */
-function replace_firt($value, $text){
+function replace_firt($value, $text) {
   return preg_replace("/^\?/", $value, $text);
 }
 

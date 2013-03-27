@@ -46,13 +46,13 @@ class Tpl {
     foreach ($__kk as $__kkn) {
       $$__kkn = $this->vars[$__kkn];
     }
-    
+
     $__kk = array_keys(App::$obj);
     foreach ($__kk as $__kkn) {
-      if(ctype_upper($__kkn[0]))
+      if (ctype_upper($__kkn[0]))
         $$__kkn = App::$obj[$__kkn];
     }
-    
+
     unset($__kk);
     unset($__kkn);
 
@@ -68,11 +68,11 @@ class Tpl {
    * Cria variáveis para serem utilizadas no template.
    */
   private function setVars() {
-    if (check_array($this->modules)){
+    if (check_array($this->modules)) {
       $modules = $this->loadModules();
     }
 
-    $modules['main'] = VIEW.App::$controller . DS . App::$action . '.php';
+    $modules['main'] = VIEW . App::$controller . DS . App::$action . '.php';
 
     $this->set('layout', $modules);
 
@@ -126,5 +126,7 @@ class Tpl {
     }
     return $j;
   }
+
 }
+
 ?>
