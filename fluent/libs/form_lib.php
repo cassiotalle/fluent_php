@@ -7,13 +7,7 @@ class FormLib {
   private $tpl = true;
   private $fields = array();
   private $name;
-  private $field_type = array(
-      'text' => 'text',
-      'password' => 'password',
-      'date' => 'date',
-  );
   private $data = array();
-  private $validate = array();
 
   public function __construct() {
     
@@ -27,8 +21,21 @@ class FormLib {
       $this->data = App::$data[$name];
     }
     $this->mask();
+    // formata action
     if (is_null($action))
       $action = App::$url;
+    else {
+      if ($action[0] != '/') {
+        $action = App::$controller . '/' . $action;
+      }
+      else{
+        $action = substr($action, 1);
+      }
+      $action = App::$link . $action;
+    }
+    
+    echo App::$link;
+    
     $this->name = $name;
     $this->form($name, $method, $action, $atributes);
   }
@@ -67,18 +74,16 @@ class FormLib {
     // Gerar campos radio e checkbox
     if ($type == 'radio' || $type == 'checkbox') {
       $br = "&nbsp;";
-      if (count($value) > 3){
+      if (count($value) > 3) {
         $br = '<br />';
       }
       foreach ($value as $v) {
         $field .= '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $v[0] . '" >' . $this->label($name, $v[1]) . $br;
       }
       echo $field;
-    } 
-    elseif($type == 'textarea'){
+    } elseif ($type == 'textarea') {
       echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
-    }
-    else {
+    } else {
       echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $this->load_value($name, $value) . '" ' . $this->atributes($atributes) . ' />';
     }
     $this->showError($name);
@@ -119,7 +124,7 @@ class FormLib {
   public function textarea($name, $title = null, $value = null, $atributes = null) {
     $this->input('textarea', $name, $title, $value, $atributes);
   }
-  
+
   public function captcha($title) {
     $this->setField('captcha');
     include(LIBS . 'componnents/captcha.php');
@@ -156,7 +161,7 @@ class FormLib {
   }
 
 // Funções para lista...
-  
+
   /**
    * Implementa elementos selecionados em um List, checkbox e radio
    * @param type $type
@@ -210,8 +215,6 @@ class FormLib {
    * Captcha
    * Gera uma imagem para validação de formulário.
    */
-  
-
 // fim das funções de select
 
   private function atributes($at) {

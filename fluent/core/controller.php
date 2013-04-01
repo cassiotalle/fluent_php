@@ -89,6 +89,7 @@ class Controller {
     foreach ($n_obj as $o) {
       $this->{$o} = App::$obj[$o];
     }
+    $this->post = $_POST;
     
     //Executa o conteúdo da action
     $action = App::$action;

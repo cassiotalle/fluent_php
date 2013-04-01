@@ -4,7 +4,7 @@
  * Define se o sistema esta instalado em uma subpasta.
  * Ex: http://www.dominio.com/seusite
  */
-App::$sub_dir = '';
+App::$sub_dir = 'fluent_php';
 
 /**
  * Configura as libs que serão carregadas em todo o projeto
