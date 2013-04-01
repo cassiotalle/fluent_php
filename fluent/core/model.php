@@ -40,16 +40,16 @@ class Model {
     if ($n == 0) {
       switch ($this->_action) {
         case 'SELECT':
-          $this->e_select();
+          return $this->e_select();
           break;
         case 'CREATE':
-          $this->e_create();
+          return $this->e_create();
           break;
         case 'DELETE':
-          $this->e_delete();
+          return $this->e_delete();
           break;
         case 'UPDATE':
-          $this->e_update();
+          return $this->e_update();
           break;
       }
     } elseif ($n == 1) {
@@ -164,6 +164,9 @@ class Model {
             $sql = 'INSERT INTO '.$this->_table.' ('.concat_array($k).') VALUES ('.concat_array($v).');';
             pr($sql);
             //return Db::query($sql);
+        }
+        else{
+          return false;
         }
   }
   

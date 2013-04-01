@@ -88,7 +88,7 @@ class Tpl {
     $this->set('controller', App::$controller);
     $this->set('action', App::$action);
     $this->set('asset', App::$obj['asset']);
-    $this->set('error_validation', Validate::$errorList);
+    $this->set('error_validation', Validate::$error_list);
     $flash = "";
     //verifica flash
     if (check_array(($_SESSION))) {

@@ -2,7 +2,7 @@
 
 class Validate {
 
-  public static $errorList = array();
+  public static $error_list = array();
   private $add = array();
   public $data;
   private $validate_user;
@@ -157,7 +157,7 @@ class Validate {
       return true;
     } else {
       unset($_SESSION['captcha']);
-      self::$errorList['captcha'] = $message;
+      self::$error_list['captcha'] = $message;
       return false;
     }
   }
@@ -287,7 +287,7 @@ class Validate {
     } else {
       $message = $this->validate_user['validation_mensages'][$type];
     }
-    self::$errorList[$field] = $message;
+    self::$error_list[$field] = $message;
   }
 
   public function process($table, $data) {
@@ -321,10 +321,16 @@ class Validate {
         }
         $valid = true;
       }
+      if(check_array(self::$error_list)){
+        return false;
+      }
+      else{
+        return true;
+      }
       //
     }
 
-    if (check_array(self::$errorList)) {
+    if (check_array(self::$error_list)) {
       return false;
     } else {
       $this->data = $data;

@@ -233,8 +233,8 @@ class FormLib {
   }
 
   private function showError($name) {
-    if (array_key_exists($name, Validate::$errorList)) {
-      echo '<span class="errorform">' . Validate::$errorList[$name] . '</span>';
+    if (array_key_exists($name, Validate::$error_list)) {
+      echo '<span class="errorform">' . Validate::$error_list[$name] . '</span>';
     }
   }
 

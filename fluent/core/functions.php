@@ -17,9 +17,20 @@ function pr($data) {
  * Redireciona arquivo
  * @param type $link
  */
-function redirect($link) {
-  if (isset(App::$reaload_flash)) {
+function redirect($link = null) {
 
+  if (is_null($link))
+    $link = App::$url;
+  else {
+    if ($link[0] != '/') {
+      $link = App::$controller . '/' . $link;
+    } else {
+      $link = substr($link, 1);
+    }
+    $link = App::$link . $link;
+  }
+
+  if (isset(App::$reaload_flash)) {
     $_SESSION['flash'] = App::$reaload_flash;
   }
   header('Location: ' . $link, true);
