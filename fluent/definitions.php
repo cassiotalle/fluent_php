@@ -20,12 +20,12 @@ App::$defealt_load_libs = array('Session','Auth');
  * App::$preload_css = array('scaffold','layout');
  * </code>
  */
-App::$preload_css = array('scaffold');
+App::$preload_css = array('kube.min','master');
 
 /**
  * Lista js carrefados em todas as páginas
  */
-App::$preload_js = array('jquery');
+App::$preload_js = array('jquery','kube.buttons');
 
 /**
  *  Login site

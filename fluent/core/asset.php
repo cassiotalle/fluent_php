@@ -73,7 +73,7 @@ class Asset {
     if (check_array($this->css)) {
       $this->css = array_unique($this->css);
       $files = concat_array($this->css, ",");
-      echo '<link rel="stylesheet" type="text/css" href="' . App::$url . 'webroot/assets/css.php?files=' . $files . '" media="screen" />' . "\n";
+      echo '<link rel="stylesheet" type="text/css" href="' . App::$link . 'webroot/assets/css.php?files=' . $files . '" media="screen" />' . "\n";
     }
   }
   
@@ -84,7 +84,7 @@ class Asset {
     if (check_array($this->js)) {
       $this->js = array_unique($this->js);
       $files = concat_array($this->js);
-      echo '<script type="text/javascript" src="' . App::$url . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
+      echo '<script type="text/javascript" src="' . App::$link . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
     }
   }
 

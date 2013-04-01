@@ -321,13 +321,6 @@ class Validate {
         }
         $valid = true;
       }
-      if(check_array(self::$error_list)){
-        return false;
-      }
-      else{
-        return true;
-      }
-      //
     }
 
     if (check_array(self::$error_list)) {
