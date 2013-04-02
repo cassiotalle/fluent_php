@@ -32,13 +32,12 @@
  * <code>
  * <html>
  *  <head>
-     <?=$asset->load_css('arquivo1','pasta/arquivo2')?>
+  <?=$asset->load_css('arquivo1','pasta/arquivo2')?>
  * </code>
  */
 class Asset {
 
   var $config;
-  var $image_path;
   var $return_path = false;
   public $css = array();
   public $js = array();
@@ -73,10 +72,10 @@ class Asset {
     if (check_array($this->css)) {
       $this->css = array_unique($this->css);
       $files = concat_array($this->css, ",");
-      echo '<link rel="stylesheet" type="text/css" href="' . App::$link . 'webroot/assets/css.php?files=' . $files . '" media="screen" />' . "\n";
+      return '<link rel="stylesheet" type="text/css" href="' . App::$link . 'webroot/assets/css.php?files=' . $files . '" media="screen" />' . "\n";
     }
   }
-  
+
   /**
    * Gera dinamicamente um arquivo js mesclando e comprimindo todos os arquivos js que devem ser carregados.
    */
@@ -84,17 +83,12 @@ class Asset {
     if (check_array($this->js)) {
       $this->js = array_unique($this->js);
       $files = concat_array($this->js);
-      echo '<script type="text/javascript" src="' . App::$link . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
+      return '<script type="text/javascript" src="' . App::$link . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
     }
   }
 
-
-  function img($filename, $subfolder = null, $style = array(), $echo = TRUE) {
-    if ($echo) {
-      echo $this->load_image($filename, $subfolder, $style);
-    } else {
-      return $this->load_image($filename, $subfolder, $style);
-    }
+  public function img($image, $alt = null, $atributes = null) {
+    return '<img alt="' . $alt . '" src="' . App::$link . 'webroot/assets/images/' . $image . '" ' . $atributes . ' />' . "\n";
   }
 
   /**
@@ -111,7 +105,7 @@ class Asset {
     }
   }
 
-   /**
+  /**
    * Adiciona um ou mais arquivos js que devem ser carregados.
    * <code>
    * Asset->load_js('script1','script2', 'script3'...);
@@ -133,23 +127,4 @@ class Asset {
    *
    * Loads in an image.
    */
-  private function load_image($image, $alt = NULL, $subfolder = NULL, $style = NULL) {
-
-    if ($subfolder === NULL) {
-      $this->image_path = base_url() . "assets/" . $this->config['images_route'] . "/";
-    } else {
-      $this->image_path = base_url() . "assets/" . $this->config['assets_route'] . "/" . $this->config['images_route'] . "/" . $subfolder . "/";
-    }
-
-    if ($this->return_path === TRUE) {
-      return $this->image_path;
-    }
-
-    if ($style === NULL) {
-      return '<img alt="' . $alt . '" src="' . $this->image_path . $image . '" />' . "\n";
-    }
-
-    return '<img alt="' . $alt . '" src="' . $this->image_path . $image . '" ' . $style['type'] . '="' . $style['value'] . '" />' . "\n";
-  }
-
 }

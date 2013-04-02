@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="page" class="wrapper">
-    <h1>V Raptor</h1>
+    <?=$asset->img('logo.png','logo');?>
     <?// pr(get_defined_vars())?>
 
     <? include($layout['menu']) ?>

@@ -11,11 +11,11 @@ class HomeController extends Controller{
     //$this->data->entrada->fields('nome','data')->where('data > 20070101')->exec();
     //$this->data->exec('select * from ? where id > 10',$talela);
     //$this->data->entrada->selectById('10');
-    $dados = array(
+    $dados = array('usuario'=>array(
         'nome'=>'Cássio Talle e Silva', 
         'email'=>'cassiolandia@gmailcom', 
         'datanascimento'=>'28/02/2013', 
-        'site'=>'www.bookserie.com.br');
+        'site'=>'www.bookserie.com.br'));
     $this->data->usuario->create($dados)->exec();
   }
   

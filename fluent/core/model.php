@@ -75,7 +75,7 @@ class Model {
 
   public function create($data) {
     $this->_action = 'CREATE';
-    $this->_data = $data['_table'];
+    $this->_data = $data[$this->_table];
     return $this;
   }
 
