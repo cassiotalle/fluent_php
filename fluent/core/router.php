@@ -5,6 +5,9 @@
  */
 App::$url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 App::$link = 'http://' . $_SERVER['SERVER_NAME'] . '/'.App::$sub_dir.'/';
+if(check_array($_SESSION['_data'])){
+  App::$data = $_SESSION['_data'];
+} 
 if (isset($_GET['url'])) {
   $url = preg_split('/(\/)/', $_GET['url'], -1, PREG_SPLIT_NO_EMPTY);
   $url[0] = strtolower($url[0]);

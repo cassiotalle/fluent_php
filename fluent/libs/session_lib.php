@@ -6,13 +6,6 @@
 class SessionLib {
 
   /**
-   * Inicia a sesseção que permite o acesso a variavel global $_SESSION
-   */
-  public function __construct() {
-    session_start();
-  }
-
-  /**
    * Seta um sesseção na variavel global $_SESSION['flash']
    * @access public
    * @param string $mensage
@@ -50,15 +43,5 @@ class SessionLib {
       unset($_SESSION['flash']);
     }
   }
-
-  /**
-   * Apaga todas as sessões existentes
-   */
-  public function destroy() {
-
-    session_destroy();
-  }
-
 }
-
 ?>

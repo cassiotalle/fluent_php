@@ -50,7 +50,9 @@ class Controller {
     $this->data = new Model();
     //$Db->describe();
     App::setIstance('Validate', 'core');
-
+    if(check_array($_SESSION['_error_list'])){
+      Validate::$error_list = $_SESSION['_error_list'];
+    }
     $Tpl = new Tpl();
 
 

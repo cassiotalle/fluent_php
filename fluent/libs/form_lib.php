@@ -1,7 +1,5 @@
 <?php
 
-include_once(CORE . 'validate.php');
-
 class FormLib {
 
   private $tpl = true;
@@ -13,7 +11,7 @@ class FormLib {
     
   }
 
-  public function create($name, $action = null, $method = 'post', $atributes = false) {
+  public function create($name, $action = null, $class = 'class="forms columnar"', $method = 'post', $atributes = false) {
     if (!array_key_exists($name, App::$model)) {
       App::$model[$name] = Neon::decode_file(MODEL . $name . '.neon');
     }
@@ -27,21 +25,20 @@ class FormLib {
     else {
       if ($action[0] != '/') {
         $action = App::$controller . '/' . $action;
-      }
-      else{
+      } else {
         $action = substr($action, 1);
       }
       $action = App::$link . $action;
     }
-    
+
     echo App::$link;
-    
+
     $this->name = $name;
-    $this->form($name, $method, $action, $atributes);
+    $this->form($name, $method, $action, $class, $atributes);
   }
 
-  private function form($name, $method, $action, $atributes = false) {
-    echo "\n" . '<form name="' . $name . '" id="' . $name . '" method="' . $method . '" action="' . $action . '" ' . $this->atributes($atributes) . ' >' . "\n";
+  private function form($name, $method, $action, $class, $atributes = false) {
+    echo "\n" . '<form name="' . $name . '" id="' . $name . '" method="' . $method . '"' . $class . ' action="' . $action . '" ' . $this->atributes($atributes) . ' >' . "\n";
   }
 
   /**
@@ -71,20 +68,13 @@ class FormLib {
    */
   public function input($type, $name, $title = null, $value = null, $atributes = null) {
     echo $this->label($name, $title);
-    // Gerar campos radio e checkbox
-    if ($type == 'radio' || $type == 'checkbox') {
-      $br = "&nbsp;";
-      if (count($value) > 3) {
-        $br = '<br />';
-      }
-      foreach ($value as $v) {
-        $field .= '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $v[0] . '" >' . $this->label($name, $v[1]) . $br;
-      }
-      echo $field;
-    } elseif ($type == 'textarea') {
-      echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
+    if(is_null($value) && isset($this->data[$name])){
+      $value = $this->data[$name];
+    }
+    if ($type == 'textarea') {
+      echo '<textarea name="' . $name . '" id="' . $this->name . '[' . $name . ']" ' . $atributes . '>' . nl2br($value) . '</textarea>';
     } else {
-      echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $this->load_value($name, $value) . '" ' . $this->atributes($atributes) . ' />';
+      echo '<input type="' . $type . '" name="' . $this->name . '[' . $name . ']" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
     }
     $this->showError($name);
   }
@@ -101,12 +91,12 @@ class FormLib {
     $this->input('hidden', $name, null, $value, $atributes);
   }
 
-  public function button($name, $value = null, $atributes = false) {
+  public function button($name, $value = null, $atributes = 'class="btn"') {
     $this->input('button', $name, null, $value, $atributes);
   }
 
-  public function submit($value) {
-    echo '<input type="submit" name="submit" id="submit" value="' . $value . '">';
+  public function submit($value, $atributes = 'class="btn"') {
+    echo '<input type="submit" name="submit" id="submit" value="' . $value . '" ' . $atributes . '>';
   }
 
   public function radio($name, $title = null, $value = array(), $atributes = null) {
@@ -133,15 +123,6 @@ class FormLib {
     echo $capt->gif;
     echo '<input type="text" name="captcha" id="captcha" maxlength="4" size="10" />';
     $this->showError('captcha');
-  }
-
-  private function load_value($name, $value) {
-    if (array_key_exists($name, $this->data)) {
-      return;
-      App::$data[$table][$this->$name];
-    }
-    else
-      return $value;
   }
 
   private function mask() {

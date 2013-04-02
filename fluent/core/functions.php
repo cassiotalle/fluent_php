@@ -29,7 +29,15 @@ function redirect($link = null) {
     }
     $link = App::$link . $link;
   }
-
+  
+  if(check_array(Validate::$error_list)){
+    $_SESSION['_error_list'] = Validate::$error_list;
+  }
+  
+  if(check_array($_POST)){
+    $_SESSION['_data'] = $_POST;
+  }
+  
   if (isset(App::$reaload_flash)) {
     $_SESSION['flash'] = App::$reaload_flash;
   }
