@@ -98,6 +98,10 @@ class FormLib {
   public function submit($value, $atributes = 'class="btn"') {
     echo '<input type="submit" name="submit" id="submit" value="' . $value . '" ' . $atributes . '>';
   }
+  
+  public function reset($value, $atributes = 'class="btn"') {
+    echo '<input type="reset" name="reset" id="reset" value="' . $value . '" ' . $atributes . '>';
+  }
 
   public function radio($name, $title = null, $value = array(), $atributes = null) {
     $this->input('radio', $name, $title, $value, $atributes);
@@ -114,7 +118,7 @@ class FormLib {
   public function textarea($name, $title = null, $value = null, $atributes = null) {
     $this->input('textarea', $name, $title, $value, $atributes);
   }
-
+ 
   public function captcha($title) {
     $this->setField('captcha');
     include(LIBS . 'componnents/captcha.php');

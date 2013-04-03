@@ -29,15 +29,15 @@ function redirect($link = null) {
     }
     $link = App::$link . $link;
   }
-  
-  if(check_array(Validate::$error_list)){
+
+  if (check_array(Validate::$error_list)) {
     $_SESSION['_error_list'] = Validate::$error_list;
   }
-  
-  if(check_array($_POST)){
+
+  if (check_array($_POST)) {
     $_SESSION['_data'] = $_POST;
   }
-  
+
   if (isset(App::$reaload_flash)) {
     $_SESSION['flash'] = App::$reaload_flash;
   }
@@ -63,7 +63,15 @@ function check_array($array) {
  * @param type $by
  * @return type
  */
-function concat_array(array $array, $by = ',') {
+function concat_array(array $array, $by = ',', $group = false) {
+  if ($group) {
+    echo "aqui";
+    array_walk($array, function(&$n, $key, $group) {
+              $n = $group. $n . $group;
+            }
+    ,$group);
+  }
+  pr($array);
   return implode($by, $array);
 }
 
@@ -205,5 +213,4 @@ function development_true() {
 function replace_firt($value, $text) {
   return preg_replace("/^\?/", $value, $text);
 }
-
 ?>

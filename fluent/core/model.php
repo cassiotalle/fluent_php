@@ -161,9 +161,8 @@ class Model {
     if(App::$obj['Validate']->process($this->_table, $this->_data)) {
             $k = array_keys(App::$obj['Validate']->data);   
             $v = App::$obj['Validate']->data;   
-            $sql = 'INSERT INTO '.$this->_table.' ('.concat_array($k).') VALUES ('.concat_array($v).');';
-            pr($sql);
-            //return Db::query($sql);
+            $sql = 'INSERT INTO '.$this->_table.' ('.concat_array($k).') VALUES ('.concat_array($v,",","'").');';
+            return Db::query($sql);
         }
         else{
           return false;

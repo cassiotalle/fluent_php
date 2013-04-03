@@ -1,1 +1,11 @@
-CREATE  TABLE `test`.`usuarios` (  `id` INT NOT NULL AUTO_INCREMENT ,  `nome` VARCHAR(45) NULL ,  `email` VARCHAR(45) NULL ,  `site` VARCHAR(45) NULL ,  `datanascimento` DATE NULL ,  `cpf` VARCHAR(45) NULL ,  `cep` VARCHAR(45) NULL ,  PRIMARY KEY (`id`) );
+CREATE TABLE `usuario` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `site` varchar(45) DEFAULT NULL,
+  `datanascimento` date DEFAULT NULL,
+  `cpf` varchar(45) DEFAULT NULL,
+  `cep` varchar(45) DEFAULT NULL,
+  `senha` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
