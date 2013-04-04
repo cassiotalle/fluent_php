@@ -67,11 +67,10 @@ function concat_array(array $array, $by = ',', $group = false) {
   if ($group) {
     echo "aqui";
     array_walk($array, function(&$n, $key, $group) {
-              $n = $group. $n . $group;
+              $n = $group . $n . $group;
             }
-    ,$group);
+            , $group);
   }
-  pr($array);
   return implode($by, $array);
 }
 
@@ -196,6 +195,8 @@ function set($name, $var) {
  * Aplica ações de debug se a variável App::$development = true
  */
 function development_true() {
+  ini_set('display_errors', 'On');
+  error_reporting(E_ALL);
   if (App::$development) {
     echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
     round(memory_get_usage(true) / 1024, 2) . 'KB | ' .
@@ -213,4 +214,5 @@ function development_true() {
 function replace_firt($value, $text) {
   return preg_replace("/^\?/", $value, $text);
 }
+
 ?>

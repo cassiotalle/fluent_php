@@ -3,7 +3,7 @@ class HomeController extends Controller{
   //public $db = false;
   public $libs = array('Form');
   public $js = array('jquery');
-  public $css = array('tabela');
+  public $css = array();
   
   function index(){
     $this->load_lib("paginate");

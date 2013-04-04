@@ -1,5 +1,5 @@
 <?php
-if(extension_loaded('zlib')){ob_start('ob_gzhandler');}
+if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
 header('Content-type: text/css');
 $files = explode(',', $_GET['files']);
 $content = null;
