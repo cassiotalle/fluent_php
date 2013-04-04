@@ -13,31 +13,36 @@ function pr($data) {
   echo '<pre>' . print_r($data, true) . '</pre>';
 }
 
+function link_to($value,$link,$style='',$atributes=''){
+   echo '<a href="'.load_link($link).'" stryle="'.$style.'" '.$atributes.'>'.$value.'</a>';
+}
+
+function load_link($link){
+  if (is_null($link))
+    return App::$url;
+  else {
+    if ($link[0] != '/') {
+      return App::$controller . '/' . $link;
+    } else {
+      return substr($link, 1);
+    }
+    return App::$link . $link;
+  }
+}
+
 /**
  * Redireciona arquivo
  * @param type $link
  */
+
 function redirect($link = null) {
-
-  if (is_null($link))
-    $link = App::$url;
-  else {
-    if ($link[0] != '/') {
-      $link = App::$controller . '/' . $link;
-    } else {
-      $link = substr($link, 1);
-    }
-    $link = App::$link . $link;
-  }
-
+  $link = load_link($link);  
   if (check_array(Validate::$error_list)) {
     $_SESSION['_error_list'] = Validate::$error_list;
   }
-
   if (check_array($_POST)) {
     $_SESSION['_data'] = $_POST;
   }
-
   if (isset(App::$reaload_flash)) {
     $_SESSION['flash'] = App::$reaload_flash;
   }
