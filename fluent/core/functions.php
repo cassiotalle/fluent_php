@@ -17,16 +17,20 @@ function link_to($value,$link,$style='',$atributes=''){
    echo '<a href="'.load_link($link).'" stryle="'.$style.'" '.$atributes.'>'.$value.'</a>';
 }
 
+/**
+ * 
+ * @param type $link
+ * @return type
+ */
 function load_link($link){
   if (is_null($link))
     return App::$url;
   else {
     if ($link[0] != '/') {
-      return App::$controller . '/' . $link;
+      return App::$link . App::$controller . '/' . $link;
     } else {
-      return substr($link, 1);
+      return App::$link . substr($link, 1);
     }
-    return App::$link . $link;
   }
 }
 

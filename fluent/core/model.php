@@ -137,11 +137,14 @@ class Model {
     $m = preg_split('/([A-Z][^A-Z]+)/', $method, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
     if (is_array($m))
       $id = strtolower($m[2]);
+    if (!preg_match('/^<|>|!|like|=/', $params[0])){
+      $params[0] = '= '.$params[0];
+    }
     if ($m[0] . $m[1] == 'selectBy') {
-      $this->_where = " WHERE {$id} {$params} ";
+      $this->_where = " WHERE {$id} {$params[0]} ";
       $this->e_select();
     } elseif ($m[0] . $m[1] == 'deleteBy') {
-      $this->_where = " WHERE {$id} {$params} ";
+      $this->_where = " WHERE {$id} {$params[0]} ";
       $this->e_delete();
     } 
   }
@@ -157,9 +160,8 @@ class Model {
   }
 
   private function e_delete() {
-    $this->_sql = 'DELETE FROM ' . $this->_table . $this->_were;
-    pr($this->sql);
-    //return Db::query($sql);
+    $this->_sql = 'DELETE FROM ' . $this->_table . $this->_where;
+    return Db::query($this->_sql);
   }
   
   private function e_create(){
