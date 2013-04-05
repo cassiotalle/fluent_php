@@ -89,28 +89,6 @@ class Tpl {
     $this->set('action', App::$action);
     $this->set('asset', App::$obj['asset']);
     $this->set('error_validation', Validate::$error_list);
-    $flash = "";
-    //verifica flash
-    if (check_array(($_SESSION))) {
-      if (isset($_SESSION['flash']) && array_key_exists('flash', $_SESSION['flash'])) {
-        if (check_array(($_SESSION['flash']['flash'])))
-          $flash = $_SESSION['flash']['flash'];
-        if (is_array($_SESSION['flash'])) {
-          $list = array_keys($_SESSION['flash']);
-          foreach ($list as $l) {
-            $this->set('flash' . ucfirst($l), $_SESSION['flash'][$l]);
-          }
-        }
-        App::$obj['Session']->destructFlash();
-      }
-      if (is_array($_SESSION)) {
-        $list = array_keys($_SESSION);
-        foreach ($list as $l) {
-          $this->set('_' . $l, $_SESSION[$l]);
-        }
-      }
-    }
-    $this->set('flash', $flash);
   }
 
   /**

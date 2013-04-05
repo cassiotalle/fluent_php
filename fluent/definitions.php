@@ -20,7 +20,7 @@ App::$defealt_load_libs = array('Session','Auth');
  * App::$preload_css = array('scaffold','layout');
  * </code>
  */
-App::$preload_css = array('kube.min','master');
+App::$preload_css = array('kube.min','master', 'config');
 
 /**
  * Lista js carrefados em todas as páginas

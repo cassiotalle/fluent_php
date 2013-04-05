@@ -8,7 +8,7 @@
   <body>
     <div id="page" class="wrapper">
       <?= $asset->img('logo.png', 'logo'); ?>
-      <?= $Session->fhash ?>
+      <?= $Session->flash() ?>
       <? include($layout['menu']) ?>
       <div id="main1"><? include($layout['main']) ?></div>
     </div>

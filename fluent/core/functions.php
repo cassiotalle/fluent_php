@@ -38,13 +38,8 @@ function set_data($table, $data){
   App::$data[$table] = $data;
 }
 
-function set_flash($message,$type = null){
-  if(isset($type)){
+function set_flash($message,$type = 'default'){
   $_SESSION['flash'][$type] = $message;
-  }
-  else{
-    $_SESSION['flash'] = $message;
-  }
 }
 
 /**
