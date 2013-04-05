@@ -10,7 +10,7 @@ define('CORE', PATH . 'fluent'.DS.'core' . DS);
 define('LIBS', PATH . 'fluent'.DS.'libs' . DS);
 define('CONTROLLER', PATH . 'controller' . DS);
 define('VIEW', PATH . 'view' . DS);
-define('SITE', PATH . 'site' . DS);
+define('SITE', PATH . 'webroot' . DS);
 define('MODEL', PATH . 'data' . DS);
 define('LAYOUT', VIEW . '_layouts' . DS);
 include (CORE . 'functions.php');

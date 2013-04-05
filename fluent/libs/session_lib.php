@@ -10,7 +10,7 @@ class SessionLib {
    * @access public
    * @param string $mensage
    */
-  public function setFlash($mensage, $name = 'flash') {
+  public function set_flash($mensage, $name = 'flash') {
     $_SESSION['flash'][$name] = $mensage;
   }
 

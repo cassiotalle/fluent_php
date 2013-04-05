@@ -50,6 +50,9 @@ function redirect($link = null) {
   exit;
 }
 
+function get_arg($nun){
+  return App::$conditions[$nun-1];
+}
 /**
  * Verifica se um array está vazia
  * @param type $array
