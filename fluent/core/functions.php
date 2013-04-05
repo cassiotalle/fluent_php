@@ -38,6 +38,10 @@ function set_data($table, $data){
   App::$data[$table] = $data;
 }
 
+function data($table){
+  return App::$obj['model']->$table;
+}
+
 function set_flash($message,$type = 'default'){
   $_SESSION['flash'][$type] = $message;
 }

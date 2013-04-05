@@ -47,8 +47,7 @@ class Controller {
     include (CORE . 'db.php');
     include (CORE . 'model.php');
     Db::connect();
-    $this->data = new Model();
-    //$Db->describe();
+    App::$obj['model'] = new Model();
     App::setIstance('Validate', 'core');
     if(check_array($_SESSION['_error_list'])){
       Validate::$error_list = $_SESSION['_error_list'];
