@@ -151,7 +151,6 @@ class Model {
 
   private function e_select() {
     $this->_sql = $this->_action . $this->_fields . 'FROM ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit;
-    echo $this->_sql;
     if(Db::query($this->_sql)){
       return Db::getData();
     }else{

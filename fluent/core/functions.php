@@ -34,6 +34,19 @@ function load_link($link){
   }
 }
 
+function set_data($table, $data){
+  App::$data[$table] = $data;
+}
+
+function set_flash($message,$type = null){
+  if(isset($type)){
+  $_SESSION['flash'][$type] = $message;
+  }
+  else{
+    $_SESSION['flash'] = $message;
+  }
+}
+
 /**
  * Redireciona arquivo
  * @param type $link
