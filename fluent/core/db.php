@@ -36,13 +36,14 @@ class Db {
     }
   }
 
-  public static function getData($tipo = 1) {
+  public static function getData() {
     if (self::$numRows) {
-      if ($tipo == 1)
-        while ($data[] = mysql_fetch_assoc(self::$data));
-      elseif ($tipo == 0)
-        while ($data[] = mysql_fetch_row(self::$data));
-      array_pop($data);
+      while ($data[] = mysql_fetch_assoc(self::$data));
+      if (self::$numRows == 1) {
+        $data = $data[0];
+      } else {
+        array_pop($data);
+      }
       return $data;
     }
     else

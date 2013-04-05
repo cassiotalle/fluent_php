@@ -142,10 +142,10 @@ class Model {
     }
     if ($m[0] . $m[1] == 'selectBy') {
       $this->_where = " WHERE {$id} {$params[0]} ";
-      $this->e_select();
+      return $this->e_select();
     } elseif ($m[0] . $m[1] == 'deleteBy') {
       $this->_where = " WHERE {$id} {$params[0]} ";
-      $this->e_delete();
+      return $this->e_delete();
     } 
   }
 
