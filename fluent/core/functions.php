@@ -10,11 +10,11 @@
  * @param type $data
  */
 function pr($data) {
-  echo '<pre>' . print_r($data, true) . '</pre>';
+    echo '<pre>' . print_r($data, true) . '</pre>';
 }
 
-function link_to($value,$link,$style='',$atributes=''){
-   echo '<a href="'.load_link($link).'" stryle="'.$style.'" '.$atributes.'>'.$value.'</a>';
+function link_to($value, $link, $style = '', $atributes = '') {
+    echo '<a href="' . load_link($link) . '" stryle="' . $style . '" ' . $atributes . '>' . $value . '</a>';
 }
 
 /**
@@ -22,63 +22,63 @@ function link_to($value,$link,$style='',$atributes=''){
  * @param type $link
  * @return type
  */
-function load_link($link){
-  if (is_null($link))
-    return App::$url;
-  else {
-    if ($link[0] != '/') {
-      return App::$link . App::$controller . '/' . $link;
-    } else {
-      return App::$link . substr($link, 1);
+function load_link($link) {
+    if (is_null($link))
+        return App::$url;
+    else {
+        if ($link[0] != '/') {
+            return App::$link . App::$controller . '/' . $link;
+        } else {
+            return App::$link . substr($link, 1);
+        }
     }
-  }
 }
 
-function set_data($table, $data){
-  App::$data[$table] = $data;
+function set_data($table, $data) {
+    App::$data[$table] = $data;
 }
 
-function data($table){
-  return App::$obj['model']->$table;
+function data($table) {
+    return App::$obj['model']->$table;
 }
 
-function set_flash($message,$type = 'default'){
-  $_SESSION['flash'][$type] = $message;
+function set_flash($message, $type = 'default') {
+    $_SESSION['flash'][$type] = $message;
 }
 
 /**
  * Redireciona arquivo
  * @param type $link
  */
-
 function redirect($link = null) {
-  $link = load_link($link);  
-  if (check_array(Validate::$error_list)) {
-    $_SESSION['_error_list'] = Validate::$error_list;
-  }
-  if (check_array($_POST)) {
-    $_SESSION['_data'] = $_POST;
-  }
-  if (isset(App::$reaload_flash)) {
-    $_SESSION['flash'] = App::$reaload_flash;
-  }
-  header('Location: ' . $link, true);
-  exit;
+    $link = load_link($link);
+    if (check_array(Validate::$error_list)) {
+        $_SESSION['_error_list'] = Validate::$error_list;
+    }
+    if (check_array($_POST)) {
+        $_SESSION['_data'] = $_POST;
+    }
+    if (isset(App::$reaload_flash)) {
+        $_SESSION['flash'] = App::$reaload_flash;
+    }
+    header('Location: ' . $link, true);
+    exit;
 }
 
-function get_arg($nun){
-  return App::$conditions[$nun-1];
+function get_arg($nun) {
+    return App::$conditions[$nun - 1];
 }
+
 /**
  * Verifica se um array está vazia
  * @param type $array
  * @return boolean
  */
 function check_array($array) {
-  if (@isset($array) && !empty($array)) {
-    return true;
-  }
-  return false;
+    if (@isset($array) && !empty($array)) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -88,14 +88,14 @@ function check_array($array) {
  * @return type
  */
 function concat_array(array $array, $by = ',', $group = false) {
-  if ($group) {
-    echo "aqui";
-    array_walk($array, function(&$n, $key, $group) {
-              $n = $group . $n . $group;
-            }
-            , $group);
-  }
-  return implode($by, $array);
+    if ($group) {
+        echo "aqui";
+        array_walk($array, function(&$n, $key, $group) {
+                    $n = $group . $n . $group;
+                }
+                , $group);
+    }
+    return implode($by, $array);
 }
 
 /**
@@ -104,10 +104,10 @@ function concat_array(array $array, $by = ',', $group = false) {
  * @return type
  */
 function moeda($get_valor) {
-  $source = array('.', ',');
-  $replace = array('', '.');
-  $valor = str_replace($source, $replace, $get_valor);
-  return $valor;
+    $source = array('.', ',');
+    $replace = array('', '.');
+    $valor = str_replace($source, $replace, $get_valor);
+    return $valor;
 }
 
 /**
@@ -118,17 +118,17 @@ function moeda($get_valor) {
  * @return type
  */
 function simpleString($string = '', $spaces = false, $alter = 0) {
-  if ($spaces === false) {
-    $spaces = '';
-  } elseif ($spaces === true) {
-    $spaces = ' ';
-  }
-  $return = strtolower(ereg_replace("[^a-zA-Z0-9-]", $spaces, strtr(utf8_decode(trim($string)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"), "aaaaeeiooouuncAAAAEEIOOOUUNC-")));
-  switch ($alter) {
-    case 1: $return = strtoupper($return);
-    case -1: $return = strtolower($return);
-  }
-  return $return;
+    if ($spaces === false) {
+        $spaces = '';
+    } elseif ($spaces === true) {
+        $spaces = ' ';
+    }
+    $return = strtolower(ereg_replace("[^a-zA-Z0-9-]", $spaces, strtr(utf8_decode(trim($string)), utf8_decode("áàãâéêíóôõúüñçÁÀÃÂÉÊÍÓÔÕÚÜÑÇ"), "aaaaeeiooouuncAAAAEEIOOOUUNC-")));
+    switch ($alter) {
+        case 1: $return = strtoupper($return);
+        case -1: $return = strtolower($return);
+    }
+    return $return;
 }
 
 /**
@@ -139,11 +139,12 @@ function simpleString($string = '', $spaces = false, $alter = 0) {
  * @return string
  */
 function uper_($string, $delimiter = '_') {
-  $a = explode($delimiter, $string);
-  foreach ($a as $b) {
-    $r .= ucfirst($b);
-  }
-  return $r;
+    $a = explode($delimiter, $string);
+    $r = '';
+    foreach ($a as $b) {
+        $r .= ucfirst($b);
+    }
+    return $r;
 }
 
 /**
@@ -151,7 +152,7 @@ function uper_($string, $delimiter = '_') {
  * @return date
  */
 function now() {
-  return date("Y-m-d H:i:s");
+    return date("Y-m-d H:i:s");
 }
 
 /**
@@ -160,7 +161,7 @@ function now() {
  * @return string
  */
 function convert_pass($pass) {
-  return md5($pass . App::$salt);
+    return md5($pass . App::$salt);
 }
 
 /**
@@ -170,40 +171,40 @@ function convert_pass($pass) {
  * @param type $feactures
  */
 function set_include_error($error, $object, $feactures) {
-  $op = array(
-      408 => array(
-          'Módulo não localizado',
-          'O módulo <b>' . $object . '</b> não foi localizado em: <span>' . $feactures . '</span>',
-          '<li> Verificar na pasta ' . LAYOUT . 'modules' . DS . '</li>' .
-          '<li> Verificar se o nome do módulo foi digitado corretamente no arquivo: ' . LAYOUT . 'loads.php'
-      ),
-      409 => array(
-          'Lib não localizada',
-          'A lib <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>',
-          '<li> Verificar se o arquivo <b>' . $object . '_lib.php </b> na pasta ' . LIBS . '</li>' .
-          '<li> Verificar se o nome do módulo foi digitado corretamente no controller ' . App::$Controller . ' : ' . CONTROLLER . App::$controller . '_controller.php' .
-          '<li> Verificar se o nome da lin foi digitada corretamente no arquivo: ' . LAYOUT . 'loads.php'
-      ),
-      407 => array(
-          'Layout não localizado',
-          'O layout <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>',
-          '<li> Verificar na pasta ' . LAYOUT . 'modules' . DS . '</li>' .
-          '<li> Verificar se o nome do módulo foi digitado corretamente no controller ' . App::$Controller . ' : ' . CONTROLLER . App::$controller . '_controller.php' .
-          '<li> Verificar se o nome da lin foi digitada corretamente no arquivo: ' . LAYOUT . 'loads.php'
-      ),
-      410 => array(
-          'Layout não localizado',
-          'O layout <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>')
-  );
+    $op = array(
+        408 => array(
+            'Módulo não localizado',
+            'O módulo <b>' . $object . '</b> não foi localizado em: <span>' . $feactures . '</span>',
+            '<li> Verificar na pasta ' . LAYOUT . 'modules' . DS . '</li>' .
+            '<li> Verificar se o nome do módulo foi digitado corretamente no arquivo: ' . LAYOUT . 'loads.php'
+        ),
+        409 => array(
+            'Lib não localizada',
+            'A lib <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>',
+            '<li> Verificar se o arquivo <b>' . $object . '_lib.php </b> na pasta ' . LIBS . '</li>' .
+            '<li> Verificar se o nome do módulo foi digitado corretamente no controller ' . App::$Controller . ' : ' . CONTROLLER . App::$controller . '_controller.php' .
+            '<li> Verificar se o nome da lin foi digitada corretamente no arquivo: ' . LAYOUT . 'loads.php'
+        ),
+        407 => array(
+            'Layout não localizado',
+            'O layout <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>',
+            '<li> Verificar na pasta ' . LAYOUT . 'modules' . DS . '</li>' .
+            '<li> Verificar se o nome do módulo foi digitado corretamente no controller ' . App::$Controller . ' : ' . CONTROLLER . App::$controller . '_controller.php' .
+            '<li> Verificar se o nome da lin foi digitada corretamente no arquivo: ' . LAYOUT . 'loads.php'
+        ),
+        410 => array(
+            'Layout não localizado',
+            'O layout <b>' . $object . '</b> não foi localizada em: <span>' . $feactures . '</span>')
+    );
 
-  if (App::$development)
-    include(PATH . 'error' . DS . 'error.php');
-  else {
-    $url;
-    $time;
-    include PATH . 'error' . DS . '404';
-  }
-  exit();
+    if (App::$development)
+        include(PATH . 'error' . DS . 'error.php');
+    else {
+        $url;
+        $time;
+        include PATH . 'error' . DS . '404';
+    }
+    exit();
 }
 
 /**
@@ -212,21 +213,21 @@ function set_include_error($error, $object, $feactures) {
  * @param type $var
  */
 function set($name, $var) {
-  App::$vars[$name] = $var;
+    App::$vars[$name] = $var;
 }
 
 /**
  * Aplica ações de debug se a variável App::$development = true
  */
 function development_true() {
-  ini_set('display_errors', 'On');
-  error_reporting(E_ALL);
-  if (App::$development) {
-    echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
-    round(memory_get_usage(true) / 1024, 2) . 'KB | ' .
-    round(memory_get_peak_usage(true), 2) . 'KB |' .
-    round(microtime(true) - $_SERVER['REQUEST_TIME'], 3) . 's</div>';
-  }
+    ini_set('display_errors', 'On');
+    error_reporting(E_ALL);
+    if (App::$development) {
+        echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
+        round(memory_get_usage(true) / 1024, 2) . 'KB | ' .
+        round(memory_get_peak_usage(true), 2) . 'KB |' .
+        round(microtime(true) - $_SERVER['REQUEST_TIME'], 3) . 's</div>';
+    }
 }
 
 /**
@@ -236,7 +237,7 @@ function development_true() {
  * @return type
  */
 function replace_firt($value, $text) {
-  return preg_replace("/^\?/", $value, $text);
+    return preg_replace("/^\?/", $value, $text);
 }
 
 ?>

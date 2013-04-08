@@ -33,7 +33,7 @@ class SessionLib {
    */
   public function flash() {
     self::$used = true;
-    if(check_array($_SESSION['flash'])){
+    if(isset($_SESSION['flash'])){
       foreach (array_keys($_SESSION['flash']) as $type){
         return '<div class="notice '.$type.'" id="flash_'.$type.'">' . $_SESSION['flash'][$type] . '</div>';
       }

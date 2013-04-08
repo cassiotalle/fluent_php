@@ -25,7 +25,7 @@ App::$router_defealt = array('home','index');
  * @var array
  */
 App::$routers=array(
-        'pessoa'=>'usuario',
+        'usuario'=>'usuarios',
         'usuario'=>array('cadastrar'=>'add')
     );
 

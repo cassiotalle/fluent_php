@@ -15,7 +15,7 @@ class FormLib {
     if (!array_key_exists($name, App::$model)) {
       App::$model[$name] = Neon::decode_file(MODEL . $name . '.neon');
     }
-    if (is_array(App::$data[$name])) {
+    if (isset(App::$data[$name]) && is_array(App::$data[$name])) {
       $this->data = App::$data[$name];
     }
     $this->mask();
@@ -130,7 +130,7 @@ class FormLib {
   }
 
   private function mask() {
-    if (check_array(App::$model[$this->name])) {
+    if (isset(App::$model[$this->name])) {
       $data = "\n" . '<script type="text/javascript">
                     jQuery(function($){';
       foreach (App::$model[$this->name] as $model) {

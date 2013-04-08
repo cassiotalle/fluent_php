@@ -16,7 +16,7 @@ class HomeController extends Controller{
         'email'=>'cassiolandia@gmailcom', 
         'datanascimento'=>'28/02/2013', 
         'site'=>'www.bookserie.com.br'));
-    $this->data->usuario->create($dados)->exec();
+    data('usuario')->create($dados)->exec();
   }
   
   function access(){

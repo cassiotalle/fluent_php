@@ -49,7 +49,7 @@ class Controller {
     Db::connect();
     App::$obj['model'] = new Model();
     App::setIstance('Validate', 'core');
-    if(check_array($_SESSION['_error_list'])){
+    if(isset($_SESSION['_error_list'])){
       Validate::$error_list = $_SESSION['_error_list'];
     }
     $Tpl = new Tpl();
