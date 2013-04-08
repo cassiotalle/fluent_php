@@ -112,7 +112,7 @@ class App {
    * condição2/condição3
    * @var string
    */
-  public static $conditions;
+  public static $conditions = array();
 
   /**
    * Lista de objetos criados pelo sistema, que podem ser acessados a
