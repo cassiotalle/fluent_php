@@ -228,7 +228,7 @@ function development_true() {
   if (App::$development) {
     echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
     round(memory_get_usage(true) / 1024, 2) . 'KB | ' .
-    round(memory_get_peak_usage(true), 2) . 'KB |' .
+    round(memory_get_peak_usage(true) / 1024, 2) . 'KB |' .
     round(microtime(true) - $_SERVER['REQUEST_TIME'], 3) . 's</div>';
   }
 }

@@ -68,14 +68,15 @@ class Model {
     return $this;
   }
 
-  public function update() {
+  public function update($data) {
     $this->_action = 'UPDATE';
+    $this->_data = $data;
     return $this;
   }
 
   public function create($data) {
     $this->_action = 'CREATE';
-    $this->_data = $data[$this->_table];
+    $this->_data = $data;
     return $this;
   }
 
@@ -100,10 +101,10 @@ class Model {
   }
 
   public function order($value) {
-    $this->_order = ' ORDER BY '.$value;
+    $this->_order = ' ORDER BY ' . $value;
     return $this;
   }
-  
+
   private function reset() {
     $this->_fields = ' * ';
     $this->_action = 'SELECT';
@@ -137,8 +138,8 @@ class Model {
     $m = preg_split('/([A-Z][^A-Z]+)/', $method, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
     if (is_array($m))
       $id = strtolower($m[2]);
-    if (!preg_match('/^<|>|!|like|=/', $params[0])){
-      $params[0] = '= '.$params[0];
+    if (!preg_match('/^<|>|!|like|=/', $params[0])) {
+      $params[0] = '= ' . $params[0];
     }
     if ($m[0] . $m[1] == 'selectBy') {
       $this->_where = " WHERE {$id} {$params[0]} ";
@@ -146,19 +147,17 @@ class Model {
     } elseif ($m[0] . $m[1] == 'deleteBy') {
       $this->_where = " WHERE {$id} {$params[0]} ";
       return $this->e_delete();
-    } 
-    elseif ($m[count($m)-1] == 'id') {
-      $this->_where = " WHERE ". strtolower(concat_array($m,'_'))." {$params[0]} ";
+    } elseif ($m[count($m) - 1] == 'id') {
+      $this->_where = " WHERE " . strtolower(concat_array($m, '_')) . " {$params[0]} ";
       return $this->e_select(true);
-    } 
+    }
   }
-  
 
   private function e_select($one = false) {
     $this->_sql = $this->_action . $this->_fields . 'FROM ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit;
-    if(Db::query($this->_sql)){
+    if (Db::query($this->_sql)) {
       return Db::getData($one);
-    }else{
+    } else {
       return false;
     }
   }
@@ -167,21 +166,33 @@ class Model {
     $this->_sql = 'DELETE FROM ' . $this->_table . $this->_where;
     return Db::query($this->_sql);
   }
-  
-  private function e_create(){
-    if(App::$obj['Validate']->process($this->_table, $this->_data)) {
-            $k = array_keys(App::$obj['Validate']->data);   
-            $v = App::$obj['Validate']->data;   
-            $sql = 'INSERT INTO '.$this->_table.' ('.concat_array($k).') VALUES ('.concat_array($v,",","'").');';
-            return Db::query($sql);
-        }
-        else{
-          return false;
-        }
+
+  private function e_create() {
+    if (App::$obj['Validate']->process($this->_table, $this->_data)) {
+      $k = array_keys(App::$obj['Validate']->data);
+      $v = App::$obj['Validate']->data;
+      $sql = 'INSERT INTO ' . $this->_table . ' (' . concat_array($k) . ') VALUES (' . concat_array($v, ",", "'") . ');';
+      return Db::query($sql);
+    } else {
+      return false;
+    }
   }
-  
-  private function e_update(){
-    
+
+  private function e_update() {
+    if (App::$obj['Validate']->process($this->_table, $this->_data)) {
+      $k = array_keys(App::$obj['Validate']->data);
+      $v = App::$obj['Validate']->data;
+      $b='';
+      foreach ($k as $a){
+        $b[] = $a.' = \''.$v[$a].'\'';
+      }
+      $sql = 'UPDATE ' . $this->_table . ' SET ' . concat_array($b) . ' '.$this->_where;
+      echo $sql;
+      return Db::query($sql);
+    } else {
+      return false;
+    }
   }
 }
+
 ?>

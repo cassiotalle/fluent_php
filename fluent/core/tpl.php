@@ -84,6 +84,7 @@ class Tpl {
 
     $this->set('url', App::$url);
     $this->set('link', App::$link);
+    $this->set('partial', VIEW.App::$controller.DS.'_');
     $this->set('load_head', $this->loadHead);
     $this->set('controller', App::$controller);
     $this->set('action', App::$action);
