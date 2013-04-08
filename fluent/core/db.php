@@ -36,10 +36,10 @@ class Db {
     }
   }
 
-  public static function getData() {
+  public static function getData($one=false) {
     if (self::$numRows) {
       while ($data[] = mysql_fetch_assoc(self::$data));
-      if (self::$numRows == 1) {
+      if ($one) {
         $data = $data[0];
       } else {
         array_pop($data);

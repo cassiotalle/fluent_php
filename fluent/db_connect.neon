@@ -1,5 +1,5 @@
 #Dados para acesso ao banco de dados
 db='test'
 host='localhost'
-user='test'
+user='root'
 password='' 

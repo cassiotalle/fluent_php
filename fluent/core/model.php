@@ -147,17 +147,17 @@ class Model {
       $this->_where = " WHERE {$id} {$params[0]} ";
       return $this->e_delete();
     } 
-    elseif ($m[0] . $m[1] . $m[2] == '') {
-      $this->_where = " WHERE {$id} {$params[0]} ";
-      return $this->e_delete();
+    elseif ($m[count($m)-1] == 'id') {
+      $this->_where = " WHERE ". strtolower(concat_array($m,'_'))." {$params[0]} ";
+      return $this->e_select(true);
     } 
   }
   
 
-  private function e_select() {
+  private function e_select($one = false) {
     $this->_sql = $this->_action . $this->_fields . 'FROM ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit;
     if(Db::query($this->_sql)){
-      return Db::getData();
+      return Db::getData($one);
     }else{
       return false;
     }
