@@ -14,7 +14,7 @@ function pr($data) {
 }
 
 function link_to($value, $link, $style = '', $atributes = '') {
-  echo '<a href="' . load_link($link) . '" stryle="' . $style . '" ' . $atributes . '>' . $value . '</a>';
+  echo '<a href="' . load_link($link) . '" class="' . $style . '" ' . $atributes . '>' . $value . '</a>';
 }
 
 /**

@@ -30,9 +30,6 @@ class FormLib {
       }
       $action = App::$link . $action;
     }
-
-    echo App::$link;
-
     $this->name = $name;
     $this->form($name, $method, $action, $class, $atributes);
   }

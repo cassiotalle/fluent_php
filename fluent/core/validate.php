@@ -145,6 +145,15 @@ class Validate {
     }
   }
 
+  public function password($field, $value, $message = null) {
+    if (isset($value)) {
+      return true;
+    } else {
+      $this->set_message_error('password', $field, $message);
+      return false;
+    }
+  }
+
   /**
    * Faz a validação do valor gerado pela imagem captcha.
    * @param type $value
@@ -290,12 +299,18 @@ class Validate {
     self::$error_list[$field] = $message;
   }
 
-  public function process($table, $data) {
+  public function process($table, $data, $update = false) {
     $model = Neon::decode_file(PATH . 'data' . DS . $table . '.neon');
     $this->table = $table;
     $valid = true;
     if ($model) {
-      $keys = array_keys($model);
+      if($update){
+        $keys = array_keys($data);
+      }
+      else{
+      $keys = array_keys($model);}
+      
+      
       foreach ($keys as $k) {
         // Chama validação de tipo de dado
         if (array_key_exists('type', $model[$k])) {

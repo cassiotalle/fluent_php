@@ -179,7 +179,7 @@ class Model {
   }
 
   private function e_update() {
-    if (App::$obj['Validate']->process($this->_table, $this->_data)) {
+    if (App::$obj['Validate']->process($this->_table, $this->_data,true)) {
       $k = array_keys(App::$obj['Validate']->data);
       $v = App::$obj['Validate']->data;
       $b='';

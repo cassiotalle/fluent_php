@@ -91,6 +91,9 @@ class Controller {
       $this->{$o} = App::$obj[$o];
     }
     $this->post = $_POST;
+    $this->action = App::$action;
+    
+    $this->beforeRender();
     
     //Executa o conteúdo da action
     $action = App::$action;
@@ -109,8 +112,6 @@ class Controller {
       include(SITE . '404.php');
       exit();
     }
-
-    $this->beforeRender();
 
     // Parapara arquivos de CSS e JS
     include CORE . 'asset.php';

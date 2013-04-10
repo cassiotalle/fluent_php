@@ -51,7 +51,7 @@ class AuthLib {
       }
       return true;
     } else {
-      $this->message = 'Usuário ou senha inválidos.';
+      set_flash('Usuário ou senha inválidos');
       return false;
     }
   }

@@ -88,7 +88,7 @@ class Asset {
   }
 
   public function img($image, $alt = null, $atributes = null) {
-    return '<img alt="' . $alt . '" src="' . App::$link . 'webroot/assets/images/' . $image . '" ' . $atributes . ' />' . "\n";
+    return '<img alt="' . $alt . '" src="' . App::$link . 'webroot/assets/img/' . $image . '" ' . $atributes . ' />' . "\n";
   }
 
   /**
