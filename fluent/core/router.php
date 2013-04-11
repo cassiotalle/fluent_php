@@ -44,15 +44,13 @@ if (isset($_GET['url'])) {
   }
   App::$controller = $url[0];
   App::$Controller = uper_(App::$controller);
-  
-  if(is_numeric($url[1])){
+
+  if (is_numeric($url[1])) {
     App::$action = 'show';
     array_unshift(App::$conditions, $url[1]);
-  }
-  else{
+  } else {
     App::$action = $url[1];
   }
-  
 } else {
   // garraga rota padrão definida pela variável App::$router_default
   App::$controller = App::$router_defealt[0];
@@ -69,13 +67,31 @@ if (file_exists(CONTROLLER . App::$controller . '_controller.php')) {
   } elseif (file_exists(VIEW . App::$controller . DS . App::$action . '.php')) {
     include VIEW . App::$controller . DS . App::$action . '.php';
   } else {
-    echo VIEW . App::$controller . DS . App::$action . '.php';
+    VIEW . App::$controller . DS . App::$action . '.php';
     include(WEBROOT . '404.php');
     // não encontrou a view
   }
 } elseif (file_exists(VIEW . App::$controller . DS . App::$action . '.php')) {
   include(VIEW . App::$controller . DS . App::$action . '.php');
+} elseif (VIEW . App::$router_defealt[0] . DS . App::$action . '.php') {
+  
+  if (file_exists(CONTROLLER . App::$router_defealt[0] . '_controller.php')) {
+    App::$controller = App::$router_defealt[0];
+    App::$Controller = ucfirst(App::$router_defealt[0]);
+    include(CONTROLLER . App::$controller . '_controller.php');
+    $controller = App::setIstance('controller');
+    if (method_exists($controller, App::$action)) {
+      $controller->main();
+    } else {
+      include VIEW . App::$router_defealt[0] . DS . App::$action . '.php';
+    }
+  }
+  
+  else{
+    include VIEW . App::$router_defealt[0] . DS . App::$action . '.php';
+  }
 } else {
+
   // não encontrou a view
   include(WEBROOT . '404.php');
   exit();

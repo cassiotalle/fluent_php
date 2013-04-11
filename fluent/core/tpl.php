@@ -47,10 +47,10 @@ class Tpl {
       $$__kkn = $this->vars[$__kkn];
     }
 
-    $__kk = array_keys(App::$obj);
+    $__kk = array_keys(App::$obj['Libs']);
     foreach ($__kk as $__kkn) {
       if (ctype_upper($__kkn[0]))
-        $$__kkn = App::$obj[$__kkn];
+        $$__kkn = App::$obj['Libs'][$__kkn];
     }
 
     unset($__kk);
@@ -71,17 +71,13 @@ class Tpl {
     if (check_array($this->modules)) {
       $modules = $this->loadModules();
     }
-
-    $modules['main'] = VIEW . App::$controller . DS . App::$action . '.php';
-
-    $this->set('layout', $modules);
-
-
+    
     //Carrega variáveis impultadas pela função set.
     if (check_array(App::$vars)) {
       $this->vars = array_merge(App::$vars, $this->vars);
     }
-
+    $modules['main'] = VIEW . App::$controller . DS . App::$action . '.php';
+    $this->set('layout', $modules);
     $this->set('url', App::$url);
     $this->set('link', App::$link);
     $this->set('partial', VIEW.App::$controller.DS.'_');

@@ -49,9 +49,17 @@ class AuthLib {
           $_SESSION['auth'][$f] = $r[0][$f];
         }
       }
-      return true;
+      set_flash('Login realizado com sucesso.','success');
+      if(isset($_SESSION['auth_url'])){
+        $a = $_SESSION['auth_url'];
+        unset($_SESSION['auth_url']);
+        redirect($a);
+      }
+      else{
+        redirect(App::$auth_url);
+      }
     } else {
-      set_flash('Usuário ou senha inválidos');
+      set_flash('Usuário ou senha inválidos','alert');
       return false;
     }
   }
@@ -62,7 +70,8 @@ class AuthLib {
    */
   public function test() {
     if (!isset($_SESSION['auth']['id']) && !isset($_SESSION['auth']['usuario'])) {
-      redirect(App::$url . App::$login_url);
+      $_SESSION['auth_url'] = App::$url;
+      redirect(App::$login_url);
     } else {
       return true;
     }
@@ -73,6 +82,14 @@ class AuthLib {
    */
   public function logout() {
     unset($_SESSION['auth']);
+  }
+  
+  public function exists(){
+    if (isset($_SESSION['auth']['id']) && !isset($_SESSION['auth']['usuario'])) {
+      return $_SESSION['auth'];
+    } else {
+      return false;
+    }
   }
 
 }

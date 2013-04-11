@@ -31,7 +31,13 @@ class App {
    */
   public static $login_url = '/';
 
+  
   /**
+   * Url de redirecionamento após o login.
+   */
+  public static $auth_url = '/';
+
+    /**
    * Controller e Action padrão do sistema, equvalente ao index. Caso o action 
    * não seja informado o sistema entende que o action padrão é o index.
    * @var array('Nome do Controller','Nome da Action')
@@ -60,11 +66,6 @@ class App {
    * @var array
    */
   public static $prefix_router = array();
-
-  /**
-   * Nome do controller com a primeira letra maiúscula.
-   * @var string
-   */
 
   /**
    * Defina time zone apara a aplicação
@@ -128,18 +129,6 @@ class App {
    */
   public static $sub_dir = null;
 
-  /**
-   * Detalhes da tabela corrente
-   * @var array
-   */
-  public static $model = array();
-
-  /**
-   * Table corrente da aplicação.
-   * @var string
-   */
-  public static $current_table = null;
-
   /*
    * Guarda o flash em caso de redirecionamento
    */
@@ -164,10 +153,22 @@ class App {
   public static $preload_js = array('query');
 
   /**
+   * Layout padrão do sistema, se false o layout não será carregado.
+   * @var array 
+   */
+  public static $layout = false;
+
+  /**
    * Techo de código pra ser carregado o hearde da página
    * @var array 
    */
   public static $head = array();
+  
+    /**
+   * Techo de código pra ser carregado o hearde da página
+   * @var array 
+   */
+  public static $model = array();
 
   /**
    * Cria um objeto usando o design patner Singleton
@@ -176,14 +177,23 @@ class App {
    * @return instance
    */
   public static function setIstance($name, $type = null) {
+
+    if ($type == 'Lib') {
+      if (isset(self::$obj[$name])) {
+        return self::$obj[$name];
+      } else {
+        $file = strtolower($name) . '_' . strtolower($type) . '.php';
+        include LIBS . $file;
+        $class = $name . $type;
+        return self::$obj['Libs'][$name] = new $class;
+      }
+    }
+
     if (isset(self::$obj[$name])) {
       return self::$obj[$name];
     } else {
       $file = strtolower($name) . '_' . strtolower($type) . '.php';
-      if ($type == 'Lib') {
-        include LIBS . $file;
-        $class = $name . $type;
-      } elseif ($name == 'controller') {
+      if ($name == 'controller') {
         $class = self::$Controller . 'Controller';
       } elseif ($type == 'core') {
         include CORE . strtolower($name) . '.php';
@@ -205,5 +215,4 @@ class App {
   }
 
 }
-
 ?>
