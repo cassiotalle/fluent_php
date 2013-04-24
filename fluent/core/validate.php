@@ -4,9 +4,10 @@ class Validate {
 
   public static $error_list = array();
   private $add = array();
-  public $data;
+  public $data = array();
   private $validate_user;
   private $table;
+  public $files = array();
 
   function __construct() {
     $this->validate_user = Neon::decode_file(PATH . 'fluent' . DS . 'validate.neon');
@@ -292,7 +293,7 @@ class Validate {
 
   private function set_message_error($type, $field, $message, $value = null) {
     if (isset($message)) {
-      $message = replace_firt($value, $this->validate_user['validation_mensages'][$type]);
+      $message = replace_firt($value, $this->validate_user['validation_mesages'][$type]);
     } else {
       $message = $this->validate_user['validation_mensages'][$type];
     }
@@ -300,48 +301,58 @@ class Validate {
   }
 
   public function process($table, $data, $update = false) {
-    $model = Neon::decode_file(PATH . 'data' . DS . $table . '.neon');
+    set_model($table);
+    $this->data = array();
     $this->table = $table;
     $valid = true;
-    if ($model) {
-      if($update){
+    if (App::$model[$table]) {
+      if ($update) {
+        unset($data['id']);
         $keys = array_keys($data);
+      } else {
+        $keys = array_keys(App::$model[$table]);
       }
-      else{
-      $keys = array_keys($model);}
-      
-      
       foreach ($keys as $k) {
-        // Chama validação de tipo de dado
-        if (array_key_exists('type', $model[$k])) {
+// Chama validação de tipo de dado
+        if (array_key_exists('type', App::$model[$table][$k])) {
           // Formata dados
-          if (array_key_exists($k, $data)) {
-            $data[$k] = $this->filter($data[$k], $model[$k]['type']);
+          if (App::$model[$table][$k]['type'] == 'file' || App::$model[$table][$k]['type'] == 'img') {
+            if (!$update) {
+              $this->files[] = $k;
+              $this->data[$k] = 'NULL';
+            } elseif (isset($data[$k])) {
+              $this->data[$k] = "'$data[$k]'";
+            }
+            continue;
+          } elseif (array_key_exists($k, $data)) {
+            $this->data[$k] = "'" . $this->filter($data[$k], App::$model[$table][$k]['type']) . "'";
           } else {
-            $data[$k] = '';
+            $this->data[$k] = 'NULL';
           }
-          $type = $model[$k]['type'];
-          $valid = $this->$type($k, $data[$k]);
+          $type = App::$model[$table][$k]['type'];
+          $valid = $this->$type($k, $this->data[$k]);
+        } else {
+          $this->data[$k] = "'" . $data[$k] . "'";
         }
-        // Chama validação condicional
-        if ($valid && array_key_exists('validate', $model[$k]) && check_array($model[$k]['validate'])) {
-          $kvs = array_keys($model[$k]['validate']);
+
+        if ($valid && array_key_exists('validate', App::$model[$table][$k]) && check_array(App::$model[$table][$k]['validate'])) {
+          $kvs = array_keys(App::$model[$table][$k]['validate']);
           foreach ($kvs as $kv) {
             $message = true;
-            if (is_array($model[$k]['validate'][$kv]) && count($model[$k]['validate'][$kv]) == 2) {
-              $message = $model[$k]['validate'][$kv][1];
+            if (is_array(App::$model[$table][$k]['validate'][$kv]) && count(App::$model[$table][$k]['validate'][$kv]) == 2) {
+              $message = App::$model[$table][$k]['validate'][$kv][1];
+              App::$model[$table][$k]['validate'][$kv] = App::$model[$table][$k]['validate'][$kv][0];
             }
-            $this->$kv($k, $data[$k], $model[$k]['validate'][$kv], $message);
+            $this->$kv($k, $data[$k], App::$model[$table][$k]['validate'][$kv], $message);
           }
         }
         $valid = true;
       }
     }
-
+    $this->files();
     if (check_array(self::$error_list)) {
       return false;
     } else {
-      $this->data = $data;
       return true;
     }
   }
@@ -377,6 +388,13 @@ class Validate {
 
   public function add($type, $field, $value, $msg = null) {
     $this->add[$field] = array($type, $value, $msg);
+  }
+
+  public function files() {
+    if (check_array($this->files)) {
+      $update = App::setIstance('upload', 'core');
+      $update->process($this->table, $this->files);
+    }
   }
 
 }

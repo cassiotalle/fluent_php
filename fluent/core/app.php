@@ -10,6 +10,13 @@ class App {
    * Indica de o ambiente é de desenvolvimento ou de produção.
    */
   public static $development = false;
+  
+  /**
+   * Indica de o ambiente é de desenvolvimento ou de produção.
+   */
+  public static $company_name = null;
+  
+  
 
   /**
    * Email do desenvolvedor do sistema, caso o memo deseje receber notícias
@@ -177,7 +184,6 @@ class App {
    * @return instance
    */
   public static function setIstance($name, $type = null) {
-
     if ($type == 'Lib') {
       if (isset(self::$obj[$name])) {
         return self::$obj[$name];
@@ -188,7 +194,6 @@ class App {
         return self::$obj['Libs'][$name] = new $class;
       }
     }
-
     if (isset(self::$obj[$name])) {
       return self::$obj[$name];
     } else {
@@ -199,8 +204,7 @@ class App {
         include CORE . strtolower($name) . '.php';
         $class = $name;
       }
-      self::$obj[$name] = new $class;
-      return self::$obj[$name];
+      return self::$obj[$name] = new $class;
     }
   }
 

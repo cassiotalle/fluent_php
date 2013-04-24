@@ -23,7 +23,6 @@ class Controller {
    * @var array Description
    */
   protected $js = array();
-  protected $db = true;
 
   /**
    * Verifica se a abstração de banco de dados será carregada.
@@ -42,25 +41,17 @@ class Controller {
   protected $tpl = null;
 
   public function main() {
-
-    // Carrega a classe de banco de dados.
-    if ($this->db) {
-      include (CORE . 'db.php');
-      include (CORE . 'model.php');
-      Db::connect();
-      App::$obj['model'] = new Model();
-      App::setIstance('Validate', 'core');
-      if (isset($_SESSION['_error_list'])) {
-        Validate::$error_list = $_SESSION['_error_list'];
-      }
+    App::setIstance('Validate', 'core');
+    
+    if (isset($_SESSION['_error_list'])) {
+      Validate::$error_list = $_SESSION['_error_list'];
     }
-
     // Carrega libs no controller
     App::$defealt_load_libs = array_unique(array_merge($this->libs, App::$defealt_load_libs));
     foreach (App::$defealt_load_libs as $ln) {
       $this->$ln = App::setIstance($ln, 'Lib');
     }
-    
+
     // Carrega valiaveis
     $this->post = $_POST;
     $this->action = App::$action;

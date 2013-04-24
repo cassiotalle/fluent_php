@@ -7,6 +7,7 @@ App::$url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 App::$link = 'http://' . $_SERVER['SERVER_NAME'] . '/' . App::$sub_dir . '/';
 if (isset($_SESSION['_data'])) {
   App::$data = $_SESSION['_data'];
+  unset($_SESSION['_data']);
 }
 if (isset($_GET['url'])) {
   $url = preg_split('/(\/)/', $_GET['url'], -1, PREG_SPLIT_NO_EMPTY);
@@ -68,30 +69,32 @@ if (file_exists(CONTROLLER . App::$controller . '_controller.php')) {
     include VIEW . App::$controller . DS . App::$action . '.php';
   } else {
     VIEW . App::$controller . DS . App::$action . '.php';
+    // não encontrou a view da action
     include(WEBROOT . '404.php');
-    // não encontrou a view
   }
 } elseif (file_exists(VIEW . App::$controller . DS . App::$action . '.php')) {
   include(VIEW . App::$controller . DS . App::$action . '.php');
 } elseif (VIEW . App::$router_defealt[0] . DS . App::$action . '.php') {
-  
   if (file_exists(CONTROLLER . App::$router_defealt[0] . '_controller.php')) {
+    App::$action =  App::$controller;
     App::$controller = App::$router_defealt[0];
     App::$Controller = ucfirst(App::$router_defealt[0]);
+    echo App::$action;
     include(CONTROLLER . App::$controller . '_controller.php');
     $controller = App::setIstance('controller');
     if (method_exists($controller, App::$action)) {
+      echo App::$action;
+      echo App::$controller;
       $controller->main();
-    } else {
+    } elseif (file_exists(VIEW . App::$router_defealt[0] . DS . App::$action . '.php')) {
+      
       include VIEW . App::$router_defealt[0] . DS . App::$action . '.php';
+    } else {
+      include(WEBROOT . '404.php');
+      exit();
     }
   }
-  
-  else{
-    include VIEW . App::$router_defealt[0] . DS . App::$action . '.php';
-  }
 } else {
-
   // não encontrou a view
   include(WEBROOT . '404.php');
   exit();

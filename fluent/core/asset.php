@@ -83,12 +83,19 @@ class Asset {
     if (check_array($this->js)) {
       $this->js = array_unique($this->js);
       $files = concat_array($this->js);
-      return '<script type="text/javascript" src="' . App::$link . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
+      echo '<script type="text/javascript" src="' . App::$link . 'webroot/assets/js.php?files=' . $files . ' "></script>' . "\n";
     }
   }
 
   public function img($image, $alt = null, $atributes = null) {
-    return '<img alt="' . $alt . '" src="' . App::$link . 'webroot/assets/img/' . $image . '" ' . $atributes . ' />' . "\n";
+    echo '<img alt="' . $alt . '" src="' . App::$link . 'webroot/assets/img/' . $image . '" ' . $atributes . ' />' . "\n";
+  }
+
+  public function img_db($image, $size = null, $alt = null, $atributes = null) {
+    if (isset($size))
+      echo '<img alt="' . $alt . '" src="' . App::$link . 'webroot/'.$image . '" ' . $atributes . ' />' . "\n";
+    else
+      echo '<img alt="' . $alt . '" src="' . App::$link . 'webroot/'.replace_firt($image, $size) . $image . '" ' . $atributes . ' />' . "\n";
   }
 
   /**

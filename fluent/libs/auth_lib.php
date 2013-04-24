@@ -1,8 +1,15 @@
 <?php
 
+/* sergio cardoso da silva
+
+  rua franklin lewis gemmel, 54;
+ */
+
 class AuthLib {
 
   public $message;
+  public $user = 'email';
+  public $pass = 'senha';
 
   /**
    * Tipo de permissão de acesso do usuário
@@ -20,46 +27,25 @@ class AuthLib {
    * @param string $pass
    * @return boolean
    */
-  public function login($fieldUser, $user, $fieldPass, $pass, $fields = null) {
+  public function login($table, $user, $pass, $fields = null) {
     $user = trim($user);
     $pass = convert_pass($pass);
 
-    $sql = 'select id, ' . $fieldUser;
-    $f = false;
-    if (is_array($fields)) {
-      $f = true;
-      foreach ($fields as $f) {
-        $sql.=',' . $f;
-      }
-    }
-    if (!Db::$conected) {
-      Db::connect();
-    }
-    $query = $sql . ' from usuario where ' . $fieldUser . '=\'' . $user . '\' and ' . $fieldPass . ' = \'' . $pass . '\'';
-    if (Db::query($query, 1)) {
+    if ($user = data($table)->where("$this->user = '$user' and $this->pass = '$pass'")->exec()) {
       $this->logout();
-      $r = Db::getData(1);
-      $this->id = $r[0]['id'];
-      $this->user = $r[0][$fieldUser];
-      $_SESSION['auth']['id'] = $this->id;
-      $_SESSION['auth'][$fieldUser] = $this->user;
-
-      if ($f) {
-        foreach ($fields as $f) {
-          $_SESSION['auth'][$f] = $r[0][$f];
-        }
-      }
-      set_flash('Login realizado com sucesso.','success');
-      if(isset($_SESSION['auth_url'])){
+      $user = $user[0];
+      unset($user[$pass]);
+      $_SESSION['auth'] = $user;
+      set_flash('Login realizado com sucesso.', 'success');
+      if (isset($_SESSION['auth_url'])) {
         $a = $_SESSION['auth_url'];
         unset($_SESSION['auth_url']);
         redirect($a);
-      }
-      else{
+      } else {
         redirect(App::$auth_url);
       }
     } else {
-      set_flash('Usuário ou senha inválidos','alert');
+      set_flash('Usuário ou senha inválidos', 'alert');
       return false;
     }
   }
@@ -68,12 +54,20 @@ class AuthLib {
    * Verifica se o usuário está logado, caso não esteja ele é redirecionado
    * para a página de login que é definida no arquivo routers.php
    */
-  public function test() {
-    if (!isset($_SESSION['auth']['id']) && !isset($_SESSION['auth']['usuario'])) {
+  public function check() {
+    if (!isset($_SESSION['auth']['id'])) {
       $_SESSION['auth_url'] = App::$url;
       redirect(App::$login_url);
     } else {
       return true;
+    }
+  }
+
+  public function getUser() {
+    if (isset($_SESSION['auth'])) {
+      return $_SESSION['auth'];
+    } else {
+      return false;
     }
   }
 
@@ -83,8 +77,8 @@ class AuthLib {
   public function logout() {
     unset($_SESSION['auth']);
   }
-  
-  public function exists(){
+
+  public function exists() {
     if (isset($_SESSION['auth']['id']) && !isset($_SESSION['auth']['usuario'])) {
       return $_SESSION['auth'];
     } else {

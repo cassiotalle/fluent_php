@@ -26,10 +26,21 @@ function load_link($link) {
   if (is_null($link))
     return App::$url;
   else {
-    if ($link[0] != '/') {
-      return App::$link . App::$controller . '/' . $link;
+    if (preg_match('/^http(s)?:\/\//', $link)) {
+      return $link;
     } else {
-      return App::$link . substr($link, 1);
+      $link = str_replace('', 'index', $link);
+      if ($link[0] == '/') {
+        if ($link == '/')
+          return App::$link;
+        else
+          return App::$link . substr($link, 1);
+      }
+      else {
+        if ($link == 'index')
+          $link = '';
+        return App::$link . App::$controller . '/' . $link;
+      }
     }
   }
 }
@@ -38,8 +49,14 @@ function set_data($table, $data) {
   App::$data[$table] = $data;
 }
 
+function set_model($table){
+  if(!isset(App::$model[$table])){
+    App::$model[$table]=Neon::decode_file(PATH . 'data' . DS . $table . '.neon');
+  }
+}
+
 function data($table) {
-  return App::$obj['model']->$table;
+  return App::setIstance('model', 'core')->$table;
 }
 
 function set_flash($message, $type = 'default') {
@@ -51,9 +68,10 @@ function set_flash($message, $type = 'default') {
  * @param type $link
  */
 function redirect($link = null, $flash = null, $type_flash = 'default') {
-  if(isset($flash)){
-    set_flash($flash,$type_flash);
+  if (isset($flash)) {
+    set_flash($flash, $type_flash);
   }
+
   $link = load_link($link);
   if (check_array(Validate::$error_list)) {
     $_SESSION['_error_list'] = Validate::$error_list;
@@ -78,7 +96,7 @@ function get_arg($nun) {
  * @return boolean
  */
 function check_array($array) {
-  if (@isset($array) && !empty($array)) {
+  if (is_array($array) && isset($array) && !empty($array)) {
     return true;
   }
   return false;
@@ -223,8 +241,8 @@ function set($name, $var) {
  * Aplica ações de debug se a variável App::$development = true
  */
 function development_true() {
-  ini_set('display_errors', 'On');
-  error_reporting(E_ALL);
+  //ini_set('display_errors', 'On');
+  //error_reporting(E_ALL);
   if (App::$development) {
     echo '<div align="right" style="padding:4px 10px;margin:0;position:fixed;bottom:0;right:0;background:#5f7d77;z-index:999;color:#FFF">' .
     round(memory_get_usage(true) / 1024, 2) . 'KB | ' .

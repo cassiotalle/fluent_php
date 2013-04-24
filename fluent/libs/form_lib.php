@@ -11,13 +11,18 @@ class FormLib {
     
   }
 
-  public function create($name, $action = null, $class = 'class="forms columnar"', $method = 'post', $atributes = false) {
+  public function create($name, $action = null, $method = 'post', $multpart = false, $class = 'forms columnar', $atributes = false) {
     if (!array_key_exists($name, App::$model)) {
       App::$model[$name] = Neon::decode_file(MODEL . $name . '.neon');
     }
     if (isset(App::$data[$name]) && is_array(App::$data[$name])) {
       $this->data = App::$data[$name];
     }
+    
+    if (isset($multpart)) {
+      $multpart = ' enctype="multipart/form-data"';
+    }
+
     $this->mask();
     // formata action
     if (is_null($action))
@@ -31,7 +36,7 @@ class FormLib {
       $action = App::$link . $action;
     }
     $this->name = $name;
-    $this->form($name, $method, $action, $class, $atributes);
+    $this->form($name, $method, $action, ' class="' . $class . '"', $atributes . $multpart);
   }
 
   private function form($name, $method, $action, $class, $atributes = false) {
@@ -46,13 +51,20 @@ class FormLib {
    */
   public function label($for, $text) {
     if (isset($text)) {
-      return '<label for="' . $for . '">' . $text . '</label>';
+      return '<label for="' . $this->name . '[' . $for . ']">' . $text . '</label>';
     } else
     if (isset(App::$model[$this->name][$for]['title'])) {
-      return '<label for="' . $for . '">' . App::$model[$this->name][$for]['title'] . '</label>';
+      return '<label for="' . $this->name . '[' . $for . ']">' . App::$model[$this->name][$for]['title'] . '</label>';
     }
     else
       return null;
+  }
+  
+  public function send($submit,$reset=null){
+    echo'<div class="form_send">';
+    $this->submit($submit);
+    if(isset($reset)) $this->reset ($reset);
+    echo'<div class="form_send">';
   }
 
   /**
@@ -65,13 +77,14 @@ class FormLib {
    */
   public function input($type, $name, $title = null, $value = null, $atributes = null) {
     echo $this->label($name, $title);
-    if(is_null($value) && isset($this->data[$name])){
+    if (is_null($value) && isset($this->data[$name])) {
       $value = $this->data[$name];
     }
+    $name = $this->name . '[' . $name . ']';
     if ($type == 'textarea') {
-      echo '<textarea name="' . $name . '" id="' . $this->name . '[' . $name . ']" ' . $atributes . '>' . nl2br($value) . '</textarea>';
+      echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
     } else {
-      echo '<input type="' . $type . '" name="' . $this->name . '[' . $name . ']" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
+      echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
     }
     $this->showError($name);
   }
@@ -95,7 +108,7 @@ class FormLib {
   public function submit($value, $atributes = 'class="btn"') {
     echo '<input type="submit" name="submit" id="submit" value="' . $value . '" ' . $atributes . '>';
   }
-  
+
   public function reset($value, $atributes = 'class="btn"') {
     echo '<input type="reset" name="reset" id="reset" value="' . $value . '" ' . $atributes . '>';
   }
@@ -115,7 +128,7 @@ class FormLib {
   public function textarea($name, $title = null, $value = null, $atributes = null) {
     $this->input('textarea', $name, $title, $value, $atributes);
   }
- 
+
   public function captcha($title) {
     $this->setField('captcha');
     include(LIBS . 'componnents/captcha.php');

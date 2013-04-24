@@ -1,5 +1,7 @@
 <?php
 
+include (CORE . 'db.php');
+
 class Model {
 
   public $_table;
@@ -11,6 +13,10 @@ class Model {
   private $_group = null;
   private $_order = null;
   private $_data = array();
+
+  function __construct() {
+    Db::connect();
+  }
 
   public function __get($name) {
     $this->_table = $name;
@@ -64,7 +70,7 @@ class Model {
   }
 
   public function fields($value) {
-    $this->_fields = $value;
+    $this->_fields = " $value ";
     return $this;
   }
 
@@ -154,8 +160,7 @@ class Model {
   }
 
   private function e_select($one = false) {
-    $this->_sql = $this->_action . $this->_fields . 'FROM ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit;
-    if (Db::query($this->_sql)) {
+    if (Db::query($this->_action . $this->_fields . 'FROM ' . $this->_table . $this->_where . $this->_group . $this->_order . $this->_limit)) {
       return Db::getData($one);
     } else {
       return false;
@@ -163,6 +168,32 @@ class Model {
   }
 
   private function e_delete() {
+    set_model($this->_table);
+    $keys = array_keys(App::$model[$this->_table]);
+    $files = null;
+    foreach ($keys as $k){
+      if (array_key_exists('type', App::$model[$this->_table][$k])) {
+          if (App::$model[$this->_table][$k]['type'] == 'file' || App::$model[$this->_table][$k]['type'] == 'img') {
+            $files[$k] = App::$model[$this->_table][$k]['thumb'];
+          }
+      }
+    }
+    if(is_array($files)){
+      $keys = array_keys($files);
+      $this->fields(concat_array($keys));
+      $file_link = $this->e_select(true);
+      foreach ($keys as $k){
+        if(is_array($files[$k])){
+          $j = array_keys($files);
+          foreach ($j as $l){
+            @unlink(replace_firt($l,$file_link[$k]));
+          }
+        }
+        else{
+          @unlink($file_link[$k]);
+        }
+      }
+    }
     $this->_sql = 'DELETE FROM ' . $this->_table . $this->_where;
     return Db::query($this->_sql);
   }
@@ -171,28 +202,46 @@ class Model {
     if (App::$obj['Validate']->process($this->_table, $this->_data)) {
       $k = array_keys(App::$obj['Validate']->data);
       $v = App::$obj['Validate']->data;
-      $sql = 'INSERT INTO ' . $this->_table . ' (' . concat_array($k) . ') VALUES (' . concat_array($v, ",", "'") . ');';
-      return Db::query($sql);
+      $sql = 'INSERT INTO ' . Db::$name . '.' . $this->_table . ' (' . concat_array($k) . ') VALUES (' . concat_array($v, ",") . ');';
+      Db::query($sql);
+      $id = Db::$sql->insert_id;
+      if (check_array(App::$obj['Validate']->files) && $id) {
+        App::$obj['upload']->upFile($id, $this->_table, App::$obj['Validate']->files);
+        $this->update(App::$obj['upload']->file)->where('id = ' . $id)->exec();
+      }
+      return $id;
     } else {
       return false;
     }
   }
 
   private function e_update() {
-    if (App::$obj['Validate']->process($this->_table, $this->_data,true)) {
+    if (App::$obj['Validate']->process($this->_table, $this->_data, true)) {
       $k = array_keys(App::$obj['Validate']->data);
       $v = App::$obj['Validate']->data;
-      $b='';
-      foreach ($k as $a){
-        $b[] = $a.' = \''.$v[$a].'\'';
+      $b = '';
+      foreach ($k as $a) {
+        $b[] = $a . ' = ' . $v[$a] . ' ';
       }
-      $sql = 'UPDATE ' . $this->_table . ' SET ' . concat_array($b) . ' '.$this->_where;
-      echo $sql;
-      return Db::query($sql);
+      $sql = 'UPDATE ' . $this->_table . ' SET ' . concat_array($b) . ' ' . $this->_where;
+      $exec = Db::query($sql);
+      if (is_array($_FILES[$this->_table]['name'])) {
+        $k_f = array_keys($_FILES[$this->_table]['name']);
+        $files = null;
+        foreach ($k_f as $f) {
+          if (strlen($_FILES[$this->_table]['name'][$f]))
+            $files[] = $f;
+        }
+        if (isset($files)) {
+          App::$obj['upload']->upFile($data['id'], $this->_table, $files);
+        }
+      }
+      return $exec;
     } else {
       return false;
     }
   }
+
 }
 
 ?>
