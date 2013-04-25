@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * Nome da companhia
+ */
+App::$company_name = 'CSDev';
+
+/**
  * Define se o sistema esta instalado em uma subpasta.
  * Ex: http://www.dominio.com/seusite
  */
