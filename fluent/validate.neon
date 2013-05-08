@@ -18,7 +18,7 @@ validation_mensages:
  cpf='Número de cpf inválido.'
  email='E-mail inválido.'
  url='Url inválida.'
- is_null='Este campo é obrigatório.'
+ not_null='Este campo é obrigatório.'
  int='Este campo só aceita números inteiros.'
  decimal='Este camos só aceita valores decimais'
  min='O valor deste campo não pode ser menor que ?.'

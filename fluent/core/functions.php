@@ -237,6 +237,10 @@ function set($name, $var) {
   App::$vars[$name] = $var;
 }
 
+function load_lib($name){
+  return App::setIstance($name, 'Lib');
+}
+
 /**
  * Aplica ações de debug se a variável App::$development = true
  */

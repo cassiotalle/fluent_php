@@ -248,9 +248,9 @@ class Validate {
    * @param type $message
    * @return boolean
    */
-  public function not_null($field, $value, $value2, $message = null) {
+  public function not_null($field, $value) {
     if (strlen($value) < 1 || is_null($value)) {
-      $this->set_message_error('not_null', $field, $message);
+      $this->set_message_error('not_null', $field, $this->validate_user['validation_mesages']['not_null']);
       return false;
     } else {
       return true;
@@ -313,7 +313,8 @@ class Validate {
         $keys = array_keys(App::$model[$table]);
       }
       foreach ($keys as $k) {
-// Chama validação de tipo de dado
+        if(App::$model[$table][$k]['not_null'] == true && !$this->not_null($k, $data[$k])) {continue;}
+        // Chama validação de tipo de dado
         if (array_key_exists('type', App::$model[$table][$k])) {
           // Formata dados
           if (App::$model[$table][$k]['type'] == 'file' || App::$model[$table][$k]['type'] == 'img') {

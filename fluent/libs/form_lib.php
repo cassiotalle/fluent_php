@@ -2,10 +2,10 @@
 
 class FormLib {
 
-  private $tpl = true;
   private $fields = array();
   private $name;
   private $data = array();
+  private $show_validation = false;
 
   public function __construct() {
     
@@ -50,11 +50,15 @@ class FormLib {
    * @return null
    */
   public function label($for, $text) {
+    $n='';
+    if(App::$model[$this->name][$for]['not_null']){
+      $n = '*';
+    }
     if (isset($text)) {
-      return '<label for="' . $this->name . '[' . $for . ']">' . $text . '</label>';
+      return '<label for="' . $this->name . '[' . $for . ']">' . $text . '<span class="not_null"> '. $n. '</span></label>';
     } else
     if (isset(App::$model[$this->name][$for]['title'])) {
-      return '<label for="' . $this->name . '[' . $for . ']">' . App::$model[$this->name][$for]['title'] . '</label>';
+      return '<label for="' . $this->name . '[' . $for . ']">' . App::$model[$this->name][$for]['title'] . '<span class="not_null"> '. $n. '</span></label>';
     }
     else
       return null;
@@ -65,6 +69,20 @@ class FormLib {
     $this->submit($submit);
     if(isset($reset)) $this->reset ($reset);
     echo'<div class="form_send">';
+  }
+  
+  public function validation($type = 0){
+    if(check_array(Validate::$error_list)){
+      if($type){
+        $this->show_validation = true;
+      }
+      else{
+        $k = array_keys(Validate::$error_list);
+        foreach ($k as $j){
+          echo '<span class=""><b>'.App::$model[$this->name][$j]['title'].'</b>:'.Validate::$error_list[$j].'</span><br />';
+        }
+      }
+    }
   }
 
   /**
@@ -80,11 +98,11 @@ class FormLib {
     if (is_null($value) && isset($this->data[$name])) {
       $value = $this->data[$name];
     }
-    $name = $this->name . '[' . $name . ']';
+    $field = $this->name . '[' . $name . ']';
     if ($type == 'textarea') {
-      echo '<textarea name="' . $name . '" id="' . $name . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
+      echo '<textarea name="' . $field . '" id="' . $field . '" ' . $atributes . '>' . nl2br($value) . '</textarea>';
     } else {
-      echo '<input type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
+      echo '<input type="' . $type . '" name="' . $field . '" id="' . $field . '" value="' . $value . '" ' . $this->atributes($atributes) . ' />';
     }
     $this->showError($name);
   }
@@ -196,6 +214,7 @@ class FormLib {
   }
 
   public function select($name, $value) {
+     echo $this->label($name, $title);
     $this->setField($name);
     $field = '<select name="' . $name . '" id="' . $name . '"  >';
     foreach ($value as $v) {
@@ -228,7 +247,7 @@ class FormLib {
   }
 
   private function showError($name) {
-    if (array_key_exists($name, Validate::$error_list)) {
+    if ($this->show_validation && array_key_exists($name, Validate::$error_list)) {
       echo '<span class="errorform">' . Validate::$error_list[$name] . '</span>';
     }
   }

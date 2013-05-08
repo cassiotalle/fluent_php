@@ -17,7 +17,7 @@ class ImgLib {
 
     if ($extension == false) {
       // *** Get extension
-      $extension = sstrtolower(end(explode('.',$file)));
+      $extension = strtolower(end(explode('.',$file)));
     }
     $this->extension = $extension;
     switch ($extension) {
@@ -155,7 +155,7 @@ class ImgLib {
   }
 
   public function saveImage($savePath, $imageQuality = "80") {    
-   
+
     switch ($this->extension) {
       case 'jpg':
       case 'jpeg':

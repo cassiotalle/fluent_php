@@ -10,13 +10,11 @@ class App {
    * Indica de o ambiente é de desenvolvimento ou de produção.
    */
   public static $development = false;
-  
+
   /**
    * Indica de o ambiente é de desenvolvimento ou de produção.
    */
   public static $company_name = null;
-  
-  
 
   /**
    * Email do desenvolvedor do sistema, caso o memo deseje receber notícias
@@ -38,13 +36,12 @@ class App {
    */
   public static $login_url = '/';
 
-  
   /**
    * Url de redirecionamento após o login.
    */
   public static $auth_url = '/';
 
-    /**
+  /**
    * Controller e Action padrão do sistema, equvalente ao index. Caso o action 
    * não seja informado o sistema entende que o action padrão é o index.
    * @var array('Nome do Controller','Nome da Action')
@@ -170,12 +167,30 @@ class App {
    * @var array 
    */
   public static $head = array();
-  
-    /**
+
+  /**
    * Techo de código pra ser carregado o hearde da página
    * @var array 
    */
   public static $model = array();
+
+ 
+   public static $smtp_host = null;
+
+    /*
+   * Email do desenvolvedor para receber relatório de erros do sistema
+   */
+  public static $smtp_email = null;
+
+  /**
+   * Email do desenvolvedor para receber relatório de erros do sistema
+   */
+  public static $smtp_pass = null;
+
+  /**
+   * Email do desenvolvedor para receber relatório de erros do sistema
+   */
+  public static $smtp_port = null;
 
   /**
    * Cria um objeto usando o design patner Singleton
@@ -219,4 +234,5 @@ class App {
   }
 
 }
+
 ?>

@@ -25,7 +25,7 @@ class Upload {
   public $file;
 
   /**
-   * Pega os erros socorridos com o envio dos arquivos;
+   * Pega os erros ocorridos com o envio dos arquivos;
    * @var array;
    */
   public $errors = false;
@@ -53,7 +53,6 @@ class Upload {
         }
       } else {
         if (check_array(App::$model[$table][$key]['thumb'])) {
-
           $k = array_keys(App::$model[$table][$key]['thumb']);
           $img = App::setIstance('Img', 'Lib');
           foreach ($k as $j) {
@@ -66,10 +65,14 @@ class Upload {
           $img->openImage($_FILES[$table]['tmp_name'][$key], $ext);
           $img->resizeImage(App::$model[$table][$key]['resize'][0], App::$model[$table][$key]['resize'][1]);
           $img->saveImage(App::$model[$table][$key]['dir'] . $name . $j . '.' . $ext);
+          pr(App::$model[$table][$key]['dir'] . $name . $j . '.' . $ext);
+          pr($_FILES[$table]['tmp_name'][$key]);
+          exit();
         } else {
           if (!move_uploaded_file($_FILES[$table]['tmp_name'][$key], App::$model[$table][$key]['dir'] . $name . '.' . $ext)) {
             Validate::$error_list[$key] = $msg[5];
           }
+          exit();
         }
       }
     }
@@ -85,7 +88,13 @@ class Upload {
       $msg['5'] = 'Erro ao fazer o upload do arquivo.';
       foreach ($list as $key) {
         if ($_FILES[$table]['error'][$key] != 0) {
-          Validate::$error_list[$key] = $_FILES[$table]['error'][$key];
+          if (App::$model[$table][$k]['not_null'] == true && $_FILES[$table]['error'][$key] == 4) {
+            Validate::$error_list[$key] = 'Campo obrigatório.';
+          } elseif ($_FILES[$table]['error'][$key] != 4) {
+            Validate::$error_list[$key] = $msg[$_FILES[$table]['error'][$key]];
+          }else{
+            
+          }
           continue;
         } else {
           $this->size($key, $table);

@@ -74,6 +74,11 @@ class Model {
     return $this;
   }
 
+  public function select(){
+    $this->_action = 'SELECT';
+    return $this;
+  }
+  
   public function update($data) {
     $this->_action = 'UPDATE';
     $this->_data = $data;
@@ -233,9 +238,13 @@ class Model {
             $files[] = $f;
         }
         if (isset($files)) {
-          App::$obj['upload']->upFile($data['id'], $this->_table, $files);
+          $this->fields('id');
+          $this->select();
+          $field = $this->e_select(true);
+          App::setIstance('upload','core')->upFile($field['id'], $this->_table, $files);
         }
       }
+
       return $exec;
     } else {
       return false;

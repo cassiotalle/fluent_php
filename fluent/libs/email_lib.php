@@ -111,6 +111,12 @@ class EmailLib {
   }
 
   function send() {
+    
+    ini_set("SMTP",App::$smtp_server);
+    ini_set('smtp_port', 25);
+    ini_set('sendmail_from', 'cassiotalle@gmail.com');
+    
+    
     //get all the emails in a string to use
     $strTo = implode(", ", $this->arrTo);
 

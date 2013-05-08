@@ -43,15 +43,17 @@ class Controller {
   public function main() {
     App::setIstance('Validate', 'core');
     
-    if (isset($_SESSION['_error_list'])) {
+    if (check_array($_SESSION['_error_list'])) {
       Validate::$error_list = $_SESSION['_error_list'];
+      unset($_SESSION['_error_list']);
     }
     // Carrega libs no controller
     App::$defealt_load_libs = array_unique(array_merge($this->libs, App::$defealt_load_libs));
+    unset($this->libs);
     foreach (App::$defealt_load_libs as $ln) {
       $this->$ln = App::setIstance($ln, 'Lib');
     }
-
+    
     // Carrega valiaveis
     $this->post = $_POST;
     $this->action = App::$action;
@@ -60,6 +62,12 @@ class Controller {
 
     //Executa o conteúdo da action
     $this->{App::$action}();
+    
+    if(is_array($this->libs)){
+      foreach ($this->libs as $l){
+        App::setIstance($l,'Lib');
+      }
+    }
 
     //Verifica se a view
     if (!is_file(VIEW . App::$controller . DS . App::$action . '.php')) {
